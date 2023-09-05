@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "317953578952",
+    "project_id": "filmfusion-947e5",
+    "storage_bucket": "filmfusion-947e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317953578952:android:08fdaa93b61975b5ccd2fd",
+        "android_client_info": {
+          "package_name": "com.sapphire.film_fusion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "317953578952-bgb4cbk54mf54ku4u9aet05voa5h8rhd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsCrOucYpPLbXN_gRt1j0C56ceLlNPy7s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317953578952-bgb4cbk54mf54ku4u9aet05voa5h8rhd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
