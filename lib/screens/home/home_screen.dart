@@ -1,6 +1,11 @@
 // lib/views/trending_movies_view.dart
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:film_fusion/screens/home/widgets/header.dart';
+import 'package:film_fusion/screens/home/widgets/latest_movie_poster.dart';
+import 'package:film_fusion/screens/home/widgets/search_movies_textfield.dart';
+import 'package:film_fusion/screens/home/widgets/section_title.dart';
+import 'package:film_fusion/screens/home/widgets/trending_movie_poster.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +27,7 @@ class HomeScreen extends GetView<HomeScreenController> {
               );
             } else {
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,43 +35,11 @@ class HomeScreen extends GetView<HomeScreenController> {
                     SizedBox(
                       height: Get.height * .07,
                     ),
-                    Text("What would you like to watch?",
-                        textScaleFactor: 1,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white.withOpacity(0.8),
-                        )),
+                    const HomePageHeader(),
                     SizedBox(
                       height: Get.height * .035,
                     ),
-                    TextFormField(
-                      // controller: passwordController,
-
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                        suffixIcon: Icon(
-                          Icons.mic,
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                        hintText: "Search",
-                        hintStyle: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
+                    const SearchMoviesTextField(),
                     SizedBox(
                       height: Get.height * .035,
                     ),
@@ -76,167 +49,19 @@ class HomeScreen extends GetView<HomeScreenController> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "New Movies",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white.withOpacity(0.6),
-                            ),
-                          ),
+                          const SectionTitle(title: "New Movies"),
                           SizedBox(
                             height: Get.height * .035,
                           ),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.loose,
-                            child: SizedBox(
-                              height: 200,
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(
-                                    width: 20,
-                                  );
-                                },
-                                scrollDirection: Axis.horizontal,
-                                itemCount: controller.latestMovies.length,
-                                itemBuilder: (context, index) {
-                                  final movie = controller.latestMovies[index];
-                                  return Card(
-                                    elevation: 5,
-                                    child: SizedBox(
-                                      width: 147,
-                                      height: 217,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              'https://image.tmdb.org/t/p/w200${movie.posterPath}',
-                                          placeholder: (context, url) =>
-                                              const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+                          LatestMoviePoster(controller: controller),
                           SizedBox(
                             height: Get.height * .035,
                           ),
-                          Text(
-                            "Trending Movies",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white.withOpacity(0.6),
-                            ),
-                          ),
+                          const SectionTitle(title: "Trending Movies"),
                           SizedBox(
                             height: Get.height * .035,
                           ),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.loose,
-                            child: SizedBox(
-                              height: 200,
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(
-                                    width: 20,
-                                  );
-                                },
-                                scrollDirection: Axis.horizontal,
-                                itemCount: controller.trendingMovies.length,
-                                itemBuilder: (context, index) {
-                                  final movie =
-                                      controller.trendingMovies[index];
-                                  return Card(
-                                    elevation: 5,
-                                    child: SizedBox(
-                                      width: 147,
-                                      height: 217,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              'https://image.tmdb.org/t/p/w200${movie.posterPath}',
-                                          placeholder: (context, url) =>
-                                              const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: Get.height * .035,
-                          ),
-                          Text(
-                            "Trending Movies",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white.withOpacity(0.6),
-                            ),
-                          ),
-                          SizedBox(
-                            height: Get.height * .035,
-                          ),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.loose,
-                            child: SizedBox(
-                              height: 200,
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(
-                                    width: 20,
-                                  );
-                                },
-                                scrollDirection: Axis.horizontal,
-                                itemCount: controller.trendingMovies.length,
-                                itemBuilder: (context, index) {
-                                  final movie =
-                                      controller.trendingMovies[index];
-                                  return Card(
-                                    elevation: 5,
-                                    child: SizedBox(
-                                      width: 147,
-                                      height: 217,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              'https://image.tmdb.org/t/p/w200${movie.posterPath}',
-                                          placeholder: (context, url) =>
-                                              const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+                          TrendingMoviePosters(controller: controller),
                         ],
                       ),
                     ))
