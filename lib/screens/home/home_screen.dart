@@ -53,7 +53,7 @@ class HomeScreen extends GetView<HomeScreenController> {
                           SizedBox(
                             height: Get.height * .035,
                           ),
-                          LatestMoviePoster(controller: controller),
+                          LatestMoviePoster(),
                           SizedBox(
                             height: Get.height * .035,
                           ),
@@ -61,7 +61,7 @@ class HomeScreen extends GetView<HomeScreenController> {
                           SizedBox(
                             height: Get.height * .035,
                           ),
-                          TrendingMoviePosters(controller: controller),
+                          TrendingMoviePosters(),
                         ],
                       ),
                     ))

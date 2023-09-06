@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:film_fusion/constants/api_key.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import '../model/new_movies_model.dart';
 import '../model/trending_movies_model.dart';
 
@@ -36,4 +37,7 @@ class MovieService {
       throw Exception('Failed to load new movies');
     }
   }
+
+
+
 }
