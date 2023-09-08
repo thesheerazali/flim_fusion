@@ -1,5 +1,5 @@
 import 'package:film_fusion/controller/home_screen_controller.dart';
-import 'package:film_fusion/controller/sign_up_controller.dart';
+
 import 'package:get/get.dart';
 
 
@@ -12,7 +12,7 @@ class ScreenBidings extends Bindings {
   void dependencies() {
     Get.lazyPut(() => HomeScreenController());
 
-    // Get.lazyPut(() => SignUpController());
+    // Get.lazyPut(() => SearchResyltController());
     
   }
 }

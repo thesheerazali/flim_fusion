@@ -1,14 +1,13 @@
-// lib/views/trending_movies_view.dart
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film_fusion/screens/home/widgets/header.dart';
 import 'package:film_fusion/screens/home/widgets/latest_movie_poster.dart';
 import 'package:film_fusion/screens/home/widgets/search_movies_textfield.dart';
+
 import 'package:film_fusion/screens/home/widgets/section_title.dart';
 import 'package:film_fusion/screens/home/widgets/trending_movie_poster.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 import '../../controller/home_screen_controller.dart';
 
@@ -17,17 +16,19 @@ class HomeScreen extends GetView<HomeScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController searchController =
+        TextEditingController(); // Add this line
     return SafeArea(
-      child: Scaffold(
-          backgroundColor: Colors.black,
-          body: Obx(() {
-            if (controller.isLoading.value) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.black,
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  controller.clearSuggestions();
+                },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,40 +40,84 @@ class HomeScreen extends GetView<HomeScreenController> {
                     SizedBox(
                       height: Get.height * .035,
                     ),
-                    const SearchMoviesTextField(),
+
+                    SearchMoviesTextField(),
+
+                    SizedBox(
+                      height: 20,
+                    ),
+
+                    Obx(() {
+                      final suggestions = controller.searchResults;
+
+                      if (suggestions.isEmpty) {
+                        return SizedBox.shrink();
+                      }
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: Get.height * .6,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: suggestions.length,
+                          itemBuilder: (context, index) {
+                            final suggestion = suggestions[index];
+                            return ListTile(
+                              title: Text(
+                                suggestion.title,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onTap: () {
+                                // Handle suggestion selection
+
+                                searchController
+                                    .clear(); // Clear the search field
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }),
                     SizedBox(
                       height: Get.height * .035,
                     ),
+                    //  const SearchResultsWidget(),
                     Expanded(
                         child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SectionTitle(title: "New Movies"),
+                          const SectionTitle(
+                            title: "New Movies",
+                          ),
                           SizedBox(
-                            height: Get.height * .035,
+                            height: Get.height * .02,
                           ),
                           LatestMoviePoster(),
-                          SizedBox(
-                            height: Get.height * .035,
+                          const SectionTitle(
+                            title: "Trending Movies",
                           ),
-                          const SectionTitle(title: "Trending Movies"),
                           SizedBox(
-                            height: Get.height * .035,
+                            height: Get.height * .02,
                           ),
                           TrendingMoviePosters(),
+                          SizedBox(
+                            height: Get.height * .035,
+                          ),
                         ],
                       ),
                     ))
                   ],
                 ),
-              );
-            }
-          })),
-    );
+              ),
+            )));
   }
 }
+
 
 
 

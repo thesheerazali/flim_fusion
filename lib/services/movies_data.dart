@@ -7,11 +7,13 @@ import '../model/new_movies_model.dart';
 import '../model/trending_movies_model.dart';
 
 class MovieService {
-  static Future<List<Result>> fetchTrendingMovies() async {
+  static Future<List<Result>> fetchTrendingMovies(int page) async {
     final response = await http.get(
       Uri.parse(
-          'https://api.themoviedb.org/3/trending/movie/day?api_key=$apiKey'),
+          'https://api.themoviedb.org/3/trending/movie/day?api_key=$apiKey&page=$page'),
     );
+     debugPrint("Trending Movies responce");
+    debugPrint(response.body);
 
     if (response.statusCode == 200) {
       final trendingMovieModel =
@@ -23,10 +25,11 @@ class MovieService {
   }
 
   /// New Movies//
-  static Future<List<Latest>> getNewMovies() async {
+  static Future<List<Latest>> getNewMovies(int page) async {
     final response = await http.get(
-      Uri.parse('https://api.themoviedb.org/3/movie/now_playing?api_key=$apiKey'),
+      Uri.parse('https://api.themoviedb.org/3/movie/now_playing?api_key=$apiKey&page=$page'),
     );
+    debugPrint("Latest Movies responce");
     debugPrint(response.body);
     if (response.statusCode == 200) {
       final lstestMovieModel =
@@ -35,6 +38,21 @@ class MovieService {
       return lstestMovieModel.results;
     } else {
       throw Exception('Failed to load new movies');
+    }
+  }
+
+   static Future<List<Result>> searchMovies(String query) async {
+  
+    final response = await http.get( Uri.parse('https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query')
+      
+    );
+
+    if (response.statusCode == 200) {
+      final trendingMovieModel =
+          TrendingMovieModel.fromJson(json.decode(response.body));
+      return trendingMovieModel.results;
+    } else {
+      throw Exception('Failed to load trending movies');
     }
   }
 

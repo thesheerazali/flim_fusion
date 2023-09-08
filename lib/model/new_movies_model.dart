@@ -26,7 +26,7 @@ class LatestMoviesModel {
     factory LatestMoviesModel.fromJson(Map<String, dynamic> json) => LatestMoviesModel(
         dates: Dates.fromJson(json["dates"]),
         page: json["page"],
-        results: List<Latest>.from(json["results"].map((x) => Latest.fromJson(x))),
+        results: List<Latest>.from(json["results"]!.map((x) => Latest.fromJson(x))),
         totalPages: json["total_pages"],
         totalResults: json["total_results"],
     );
@@ -62,14 +62,14 @@ class Dates {
 
 class Latest {
     bool adult;
-    String backdropPath;
+    String? backdropPath;
     List<int> genreIds;
     int id;
-    OriginalLanguage originalLanguage;
+  //  OriginalLanguage originalLanguage;
     String originalTitle;
     String overview;
     double popularity;
-    String posterPath;
+    String? posterPath;
     DateTime releaseDate;
     String title;
     bool video;
@@ -81,7 +81,7 @@ class Latest {
         required this.backdropPath,
         required this.genreIds,
         required this.id,
-        required this.originalLanguage,
+      //  required this.originalLanguage,
         required this.originalTitle,
         required this.overview,
         required this.popularity,
@@ -95,14 +95,14 @@ class Latest {
 
     factory Latest.fromJson(Map<String, dynamic> json) => Latest(
         adult: json["adult"],
-        backdropPath: json["backdrop_path"],
+          backdropPath: json["backdrop_path"] != null ? json["backdrop_path"] as String : "",
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         id: json["id"],
-        originalLanguage: originalLanguageValues.map[json["original_language"]]!,
+      //  originalLanguage: originalLanguageValues.map[json["original_language"]]!,
         originalTitle: json["original_title"],
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] != null ? json["poster_path"] as String : "",
         releaseDate: DateTime.parse(json["release_date"]),
         title: json["title"],
         video: json["video"],
@@ -115,7 +115,7 @@ class Latest {
         "backdrop_path": backdropPath,
         "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
         "id": id,
-        "original_language": originalLanguageValues.reverse[originalLanguage],
+      //  "original_language": originalLanguageValues.reverse[originalLanguage],
         "original_title": originalTitle,
         "overview": overview,
         "popularity": popularity,
