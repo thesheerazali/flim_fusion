@@ -1,36 +1,66 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class SearchMoviesTextField extends StatelessWidget {
-  const SearchMoviesTextField({super.key});
+
+import 'package:film_fusion/controller/home_screen_controller.dart';
+import 'package:film_fusion/screens/home/widgets/search_screen_result.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class SearchMoviesTextField extends GetView<HomeScreenController> {
+  SearchMoviesTextField({
+    super.key,
+  });
+
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      // controller: passwordController,
+        controller: searchController,
+        onChanged: (query) {
+          if (query.isEmpty) {
+            controller.clearSuggestions();
+            _searchFocusNode.unfocus();
+          } else {
+            controller.searchMovies(query);
+            _searchFocusNode.requestFocus();
+          }
+        },
 
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(vertical: 8),
-        prefixIcon: Icon(
-          Icons.search,
-          color: Colors.white.withOpacity(0.6),
-        ),
-        suffixIcon: Icon(
-          Icons.mic,
-          color: Colors.white.withOpacity(0.6),
-        ),
-        hintText: "Search",
-        hintStyle: TextStyle(
-          fontSize: 16,
-          color: Colors.white.withOpacity(0.6),
-        ),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.12),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
+        // Clear the suggestions list when the text field is empty
+        onEditingComplete: () {
+          if (searchController.text.isEmpty) {
+            controller.clearSuggestions();
+          }
+        },
+        // controller: searchController,
+        style: TextStyle(color: Colors.white),
+        focusNode: _searchFocusNode,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.white.withOpacity(0.6),
+          ),
+          suffixIcon: GestureDetector(
+            onTap: () => Get.to(() => SearchResultsScreen()),
+            child: Icon(
+              Icons.mic,
+              color: Colors.white.withOpacity(0.6),
+            ),
+          ),
+          hintText: "Search",
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.white.withOpacity(0.6),
+          ),
+          labelStyle: TextStyle(color: Colors.white),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+        ));
   }
 }
