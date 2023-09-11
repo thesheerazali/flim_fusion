@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../model/new_movies_model.dart';
 import '../model/trending_movies_model.dart';
 import '../services/movies_data.dart';
@@ -15,6 +16,7 @@ class HomeScreenController extends GetxController {
   var scrollControllerLatest = ScrollController();
   var scrollControllerTrending = ScrollController();
   final searchResults = <Result>[].obs;
+
   // final suggestions = <String>[].obs; // Suggestions list
 
   @override
@@ -22,6 +24,8 @@ class HomeScreenController extends GetxController {
     fetchLatestMovies();
     fetchTrendingMovies();
     configureScrollControllers();
+    ;
+
     super.onInit();
   }
 
@@ -31,8 +35,8 @@ class HomeScreenController extends GetxController {
       // Fetch latest movies data
       final newLatestMovies = await MovieService.getNewMovies(latestPage.value);
       latestMovies.addAll(newLatestMovies);
-      latestHasMoreData.value =
-          true; // Set to true if there's more data to load
+      latestHasMoreData.value = true;
+     // Set to true if there's more data to load
     } finally {
       isLoading(false);
     }
@@ -63,14 +67,6 @@ class HomeScreenController extends GetxController {
     }
   }
 
-  // void updateSuggestions(String query) {
-  //   final movieNames = trendingMovies
-  //       .map((movie) => movie.title)
-  //       .where((name) => name.toLowerCase().contains(query.toLowerCase()))
-  //       .toList();
-  //   suggestions.assignAll(movieNames);
-  // }
-
   void clearSuggestions() {
     searchResults.clear();
   }
@@ -100,8 +96,6 @@ class HomeScreenController extends GetxController {
   }
 
   void loadMoreLatestMovies() async {
-    // Implement logic to load more latest movies data
-    // For example, increment page number and call fetchLatestMovies()
     latestPage++;
     debugPrint(latestPage.toString());
     final moreLatestMovies = await MovieService.getNewMovies(latestPage.value);
@@ -109,16 +103,12 @@ class HomeScreenController extends GetxController {
   }
 
   void loadMoreTrendingMovies() async {
-    // Implement logic to load more trending movies data
-    // For example, increment page number and call fetchTrendingMovies()
     trendingPage++;
     debugPrint(trendingPage.toString());
     final moreTrendingMovies =
         await MovieService.fetchTrendingMovies(trendingPage.value);
     trendingMovies.addAll(moreTrendingMovies);
   }
-
-  // ... other fields ...
 
   void resetPageParameter() {
     trendingPage = 1.obs; // Reset the page parameter for trending movies

@@ -26,6 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  String phoneNumber = '';
 
   String? _validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -82,6 +83,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
+  void _validatePhoneNumber(String value) {
+    if (value.isEmpty) {
+      // Show an error message if the field is empty
+      setState(() {
+        phoneNumber = 'Please enter a phone number';
+      });
+    } else if (value.length != 11) {
+      // Show an error message if the phone number is not 11 digits
+      setState(() {
+        phoneNumber = 'Phone number must be 11 digits';
+      });
+    } else {
+      // Clear the error message if the condition is met
+      setState(() {
+        phoneNumber = '';
+      });
+    }
+  }
+
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Confirm Password is required';
@@ -117,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: Container(
           height: double.infinity,
           width: double.infinity,
@@ -245,28 +265,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   TextFormField(
                     controller: _phoneController,
                     validator: _validatePhone,
+                    onChanged: _validatePhoneNumber,
                     style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      errorText: phoneNumber,
                       hintText: 'Phone No',
-                      hintStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
+                      hintStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
                         Icons.phone,
                         color: Colors.white,
                       ),
                       alignLabelWithHint: true,
-                      focusedBorder: UnderlineInputBorder(
+                      errorBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color:
+                              Colors.white, // Change the border color to blue
+                        ),
+                      ),
+                      focusedErrorBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors
                               .white, // Color of the bottom line when focused
                           width:
                               2.0, // Thickness of the bottom line when focused
                         ),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 2 // Color of the bottom line when unfocused
-                            ),
                       ),
                     ),
                   ),

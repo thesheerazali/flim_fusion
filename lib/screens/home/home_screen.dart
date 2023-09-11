@@ -1,4 +1,4 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film_fusion/screens/home/widgets/header.dart';
 import 'package:film_fusion/screens/home/widgets/latest_movie_poster.dart';
 import 'package:film_fusion/screens/home/widgets/search_movies_textfield.dart';
@@ -7,7 +7,6 @@ import 'package:film_fusion/screens/home/widgets/section_title.dart';
 import 'package:film_fusion/screens/home/widgets/trending_movie_poster.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 import '../../controller/home_screen_controller.dart';
 
@@ -21,97 +20,120 @@ class HomeScreen extends GetView<HomeScreenController> {
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.black,
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  controller.clearSuggestions();
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: Get.height * .07,
-                    ),
-                    const HomePageHeader(),
-                    SizedBox(
-                      height: Get.height * .035,
-                    ),
-
-                    SearchMoviesTextField(),
-
-                    SizedBox(
-                      height: 20,
-                    ),
-
-                    Obx(() {
-                      final suggestions = controller.searchResults;
-
-                      if (suggestions.isEmpty) {
-                        return SizedBox.shrink();
-                      }
-
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        height: Get.height * .6,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: suggestions.length,
-                          itemBuilder: (context, index) {
-                            final suggestion = suggestions[index];
-                            return ListTile(
-                              title: Text(
-                                suggestion.title,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onTap: () {
-                                // Handle suggestion selection
-
-                                searchController
-                                    .clear(); // Clear the search field
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    }),
-                    SizedBox(
-                      height: Get.height * .035,
-                    ),
-                    //  const SearchResultsWidget(),
-                    Expanded(
-                        child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SectionTitle(
-                            title: "New Movies",
-                          ),
-                          SizedBox(
-                            height: Get.height * .02,
-                          ),
-                          LatestMoviePoster(),
-                          const SectionTitle(
-                            title: "Trending Movies",
-                          ),
-                          SizedBox(
-                            height: Get.height * .02,
-                          ),
-                          TrendingMoviePosters(),
-                          SizedBox(
-                            height: Get.height * .035,
-                          ),
-                        ],
+            body: Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Color.fromRGBO(38, 116, 9, 1),
+                  Color.fromRGBO(0, 0, 0, 1),
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    controller.clearSuggestions();
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: Get.height * .07,
                       ),
-                    ))
-                  ],
+                      const HomePageHeader(),
+                      SizedBox(
+                        height: Get.height * .035,
+                      ),
+
+                      SearchMoviesTextField(),
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      Obx(() {
+                        final suggestions = controller.searchResults;
+
+                        if (suggestions.isEmpty) {
+                          return SizedBox.shrink();
+                        }
+
+                        return Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          height: Get.height * .5,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: suggestions.length,
+                            itemBuilder: (context, index) {
+                              final suggestion = suggestions[index];
+                              return SizedBox(
+                                height: Get.height * .09,
+                                child: ListTile(
+                                  leading: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://image.tmdb.org/t/p/w200${suggestion.posterPath}',
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                    fit: BoxFit.fill,
+                                  ),
+                                  title: Text(
+                                    suggestion.title,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    // Handle suggestion selection
+
+                                    searchController
+                                        .clear(); // Clear the search field
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }),
+                      SizedBox(
+                        height: Get.height * .035,
+                      ),
+                      //  const SearchResultsWidget(),
+
+                      Expanded(
+                          child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SectionTitle(
+                              title: "New Movies",
+                            ),
+                            SizedBox(
+                              height: Get.height * .02,
+                            ),
+                            LatestMoviePoster(),
+                            const SectionTitle(
+                              title: "Trending Movies",
+                            ),
+                            SizedBox(
+                              height: Get.height * .02,
+                            ),
+                            TrendingMoviePosters(),
+                            SizedBox(
+                              height: Get.height * .035,
+                            ),
+                          ],
+                        ),
+                      ))
+                    ],
+                  ),
                 ),
               ),
             )));

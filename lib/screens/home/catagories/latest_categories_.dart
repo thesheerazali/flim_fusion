@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film_fusion/constants/routes.dart';
 import 'package:film_fusion/controller/home_screen_controller.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 
+import '../../../controller/favorite_screen_controller.dart';
 import '../../../utils/genre_data.dart';
 
 class LatestCategoriesList extends GetView<HomeScreenController> {
@@ -16,15 +18,10 @@ class LatestCategoriesList extends GetView<HomeScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final FavorieScreenController favcontroller =
+        Get.find<FavorieScreenController>();
+
     return Obx(() {
-      // Check which category is active (latest or trending)
-      // final isLatestCategory = controller.latestHasMoreData.value;
-
-      // // Get the list of movies based on the active category
-      // final movies = isLatestCategory
-      //     ? controller.latestMovies
-      //     : controller.trendingMovies;
-
       return WillPopScope(
           onWillPop: () async {
             // Reset the page parameter when navigating back
@@ -76,24 +73,44 @@ class LatestCategoriesList extends GetView<HomeScreenController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(50),
-                                topRight: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(50),
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    'https://image.tmdb.org/t/p/w200${movie.posterPath}',
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                fit: BoxFit.fill,
-                                width: 147,
-                                height: 217,
-                              ),
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(50),
+                                    topRight: Radius.circular(20),
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(50),
+                                  ),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://image.tmdb.org/t/p/w200${movie.posterPath}',
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                    fit: BoxFit.fill,
+                                    width: 147,
+                                    height: 217,
+                                  ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        left: Get.width * .27, top: 10),
+                                    child: IconButton(
+                                      icon: Obx(() {
+                                        return Icon(
+                                          Icons.favorite_border,
+                                          color: Colors.grey,
+                                        );
+                                      }),
+                                      onPressed: () {
+                                        // Toggle favorite status here
+                                        // favcontroller
+                                        //     .toggleFavoriteStatus(movie.id);
+                                      },
+                                    )),
+                              ],
                             ),
                             const SizedBox(
                               height: 10,

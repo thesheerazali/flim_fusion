@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,8 +46,8 @@ class _MainPageState extends State<MainPage> {
   List<Widget> pages = [
     const HomeScreen(),
     const StreamScreen(),
-    const FavScreen(),
-    const ProfileScreen(),
+    FavScreen(),
+    ProfileScreen(),
   ];
 
   DateTime? currentBackPressTime; // Add this variable

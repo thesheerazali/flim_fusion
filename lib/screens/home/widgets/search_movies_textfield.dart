@@ -43,7 +43,7 @@ class SearchMoviesTextField extends GetView<HomeScreenController> {
             color: Colors.white.withOpacity(0.6),
           ),
           suffixIcon: GestureDetector(
-            onTap: () => Get.to(() => SearchResultsScreen()),
+            onTap: () => Get.to(()),
             child: Icon(
               Icons.mic,
               color: Colors.white.withOpacity(0.6),

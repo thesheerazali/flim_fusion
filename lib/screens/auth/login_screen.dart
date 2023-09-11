@@ -47,10 +47,12 @@ class _LoginScreenState extends State<LoginScreen> {
             password: _passwordController.text.toString())
         .then((value) {
       setState(() {
-        ToastMessage.toastMessage("LoginSuffefull");
         isLoading = false;
       });
-      ToastMessage.toastMessage(value.user!.email.toString());
+
+      Get.snackbar("LOGIN", "successfully",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.greenAccent.withOpacity(0.5));
       Get.offNamed(mainScreen);
     }).onError((error, stackTrace) {
       ToastMessage.toastMessage(error.toString());

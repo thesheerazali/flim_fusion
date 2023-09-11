@@ -4,6 +4,7 @@ String signup = "/signup";
 String homeScreen = "/home";
 String detailScreen = "/detail";
 String mainScreen = "/main";
+String favScreen = "/fav";
 // String latestdetailScreen = "/detail";
 // String trendingCategoryScreen = "/trending";
 // String latestCategoryScreen = "/latest";

@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/screens/profile/profile_screen.dart';
 import 'package:film_fusion/utils/genre_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -13,7 +15,7 @@ class MovieDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final detailData = Get.arguments;
-    final genreModel = GenreData().mapGenreIdsToNames(detailData.genreIds,4);
+    final genreModel = GenreData().mapGenreIdsToNames(detailData.genreIds, 4);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -43,7 +45,7 @@ class MovieDetailScreen extends StatelessWidget {
                   InkWell(
                     onTap: () => Get.back(),
                     child: Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(50),
@@ -57,20 +59,26 @@ class MovieDetailScreen extends StatelessWidget {
                           color: Colors.white,
                         )),
                   ),
-                  Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
+                  GestureDetector(
+                    onTap: () {
+                      showPopupMenu(context);
+                      debugPrint("tab");
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
                         ),
-                      ),
-                      child: const Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                      )),
+                        child: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                        )),
+                  ),
                 ],
               ),
             ),
@@ -186,6 +194,46 @@ class MovieDetailScreen extends StatelessWidget {
       }
     }
     return '';
+  }
+
+  void showPopupMenu(BuildContext context) {
+    showMenu<int>(
+      context: context,
+      position: RelativeRect.fromLTRB(100, 30, 10, 10),
+      color: Colors.grey,
+      items: [
+        const PopupMenuItem<int>(
+          value: 1,
+          child: Text('Home Screen'),
+        ),
+        const PopupMenuItem<int>(
+          value: 2,
+          child: Text('Favorite Screen'),
+        ),
+        const PopupMenuItem<int>(
+          value: 3,
+          child: Text('Profile Screen'),
+        ),
+        const PopupMenuItem<int>(
+          value: 4,
+          child: Text('Screen 4'),
+        ),
+      ],
+    ).then((value) {
+      if (value == null) return;
+
+      // Handle menu item selection
+
+      if (value == 1) {
+        Get.toNamed(homeScreen);
+      } else if (value == 2) {
+        Get.toNamed(favScreen);
+      } else if (value == 3) {
+        Get.to(ProfileScreen());
+      } else if (value == 4) {
+        Get.toNamed(homeScreen);
+      }
+    });
   }
 }
 

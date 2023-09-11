@@ -2,6 +2,7 @@
 
 import 'package:film_fusion/main.dart';
 import 'package:film_fusion/screens/auth/sign_up_screen.dart';
+import 'package:film_fusion/screens/favorite/fav_screen.dart';
 import 'package:film_fusion/screens/home/detailScreen/detail_screen.dart';
 import 'package:film_fusion/screens/home/home_screen.dart';
 import 'package:film_fusion/screens/home/splash/splash_screen.dart';
@@ -28,7 +29,9 @@ class RouteGenerator {
       GetPage(
           name: '/home', page: () =>  HomeScreen(), binding: ScreenBidings()),
      GetPage(
-          name: '/detail', page: () =>  MovieDetailScreen(), binding: ScreenBidings())
+          name: '/detail', page: () =>  MovieDetailScreen(), binding: ScreenBidings()),
+            GetPage(
+          name: '/fav', page: () =>  FavScreen(), binding: ScreenBidings())
     ];
   }
 }

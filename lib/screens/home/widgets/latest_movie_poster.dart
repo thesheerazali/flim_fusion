@@ -31,7 +31,7 @@ class LatestMoviePoster extends GetView<HomeScreenController> {
                 return GestureDetector(
                   onTap: () => Get.toNamed(detailScreen, arguments: movie),
                   child: Container(
-                    width: 200,
+                    width: 150,
                     margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,12 +1,151 @@
-import 'package:flutter/material.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:film_fusion/controller/favorite_screen_controller.dart';
 
-class FavScreen extends StatelessWidget {
-  const FavScreen({super.key});
+// import 'package:flutter/material.dart';
+// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Fav Screen")),
-    );
-  }
-}
+// import 'package:get/get.dart';
+// // // Replace with your controller
+
+// class FavScreen extends GetView<FavorieScreenController> {
+//   @override
+//   Widget build(BuildContext context) {
+//     Get.put(FavorieScreenController());
+//     // controller.fetchFavoriteMovies();
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Favorites'),
+//       ),
+//       body: Obx(() {
+//         if (controller.isLoading.isTrue) {
+//           return Center(
+//             child: CircularProgressIndicator(),
+//           );
+//         } else if (controller.favoriteMovies.isEmpty) {
+//           return const Center(
+//             child: Text('You have no favorite movies yet.'),
+//           );
+//         } else {
+//           return controller.isLoading.isFalse
+//               ? ListView.builder(
+//                   itemCount: controller.favoriteMovies.length,
+//                   itemBuilder: (BuildContext context, int index) {
+//                     final movie = controller.favoriteMovies[index];
+//                     return ListTile(
+//                       leading: CachedNetworkImage(
+//                         imageUrl:
+//                             'https://image.tmdb.org/t/p/w200${movie.posterPath}',
+//                         placeholder: (context, url) =>
+//                             const CircularProgressIndicator(),
+//                         errorWidget: (context, url, error) =>
+//                             const Icon(Icons.error),
+//                         fit: BoxFit.fill,
+//                         width: 80,
+//                       ),
+//                       title: Text(movie.title),
+//                       subtitle: RatingBar.builder(
+//                         initialRating: movie.voteAverage /
+//                             2, // Divide by 2 to convert to a 5-star rating
+//                         minRating: 1,
+//                         direction: Axis.horizontal,
+//                         allowHalfRating: true,
+//                         itemCount: 5,
+//                         itemSize: 15,
+//                         unratedColor: Colors.grey,
+//                         itemBuilder: (context, _) => const Icon(Icons.star,
+//                             color: Color.fromRGBO(242, 163, 58, 1)),
+//                         onRatingUpdate: (newRating) {
+//                           // Handle rating updates if needed
+//                         },
+//                       ),
+//                       trailing: IconButton(
+//                         icon: const Icon(Icons.delete),
+//                         onPressed: () {
+//                           // Remove the movie from favorites
+//                           controller.removeFromFavorites(movie.id);
+//                         },
+//                       ),
+//                     );
+//                   },
+//                 )
+//               : const Center(
+//                   child: CircularProgressIndicator(),
+//                 );
+//         }
+//       }),
+//     );
+//   }
+// }
+
+
+
+// // class FavScreen extends GetView<FavorieScreenController> {
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Scaffold(
+// //       appBar: AppBar(
+// //         title: Text('Favorites'),
+// //       ),
+// //       body: Obx(() {
+// //         if (controller.favoriteMovies.isEmpty) {
+// //           return const Center(
+// //             child: Text('You have no favorite movies yet.'),
+// //           );
+// //         } else {
+// //           return NotificationListener<ScrollNotification>(
+// //             onNotification: (ScrollNotification scrollInfo) {
+// //               if (scrollInfo is ScrollEndNotification &&
+// //                   scrollInfo.metrics.pixels ==
+// //                       scrollInfo.metrics.maxScrollExtent) {
+// //                 // User reached the end of the list, load more data here
+// //                 controller.fetchFavoriteMovies();
+// //               }
+// //               return false;
+// //             },
+// //             child: ListView.builder(
+// //               itemCount: controller.favoriteMovies.length,
+// //               itemBuilder: (BuildContext context, int index) {
+// //                 final movie = controller.favoriteMovies[index];
+// //                 return ListTile(
+// //                       leading: CachedNetworkImage(
+// //                         imageUrl:
+// //                             'https://image.tmdb.org/t/p/w200${movie.posterPath}',
+// //                         placeholder: (context, url) =>
+// //                             const CircularProgressIndicator(),
+// //                         errorWidget: (context, url, error) =>
+// //                             const Icon(Icons.error),
+// //                         fit: BoxFit.fill,
+// //                         width: 80,
+// //                       ),
+// //                       title: Text(movie.title),
+// //                       subtitle: RatingBar.builder(
+// //                         initialRating: movie.voteAverage /
+// //                             2, // Divide by 2 to convert to a 5-star rating
+// //                         minRating: 1,
+// //                         direction: Axis.horizontal,
+// //                         allowHalfRating: true,
+// //                         itemCount: 5,
+// //                         itemSize: 15,
+// //                         unratedColor: Colors.white.withOpacity(0.8),
+// //                         itemBuilder: (context, _) => const Icon(Icons.star,
+// //                             color: Color.fromRGBO(242, 163, 58, 1)),
+// //                         onRatingUpdate: (newRating) {
+// //                           // Handle rating updates if needed
+// //                         },
+// //                       ),
+// //                       trailing: IconButton(
+// //                         icon: Icon(Icons.delete),
+// //                         onPressed: () {
+// //                           // Remove the movie from favorites
+// //                           controller.removeFromFavorites(movie.id);
+// //                         },
+// //                       ),
+// //                     );
+// //               },
+// //             ),
+// //           );
+// //         }
+// //       }),
+// //     );
+// //   }
+// // }
