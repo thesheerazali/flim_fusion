@@ -1,22 +1,26 @@
 class UserModel {
-  final String name;
+  final String uid;
+  final String name; // Firebase User ID
   final String username;
   final String email;
-  final String phoneNo;
+  final String phone;
 
-  UserModel({
-    required this.phoneNo,
-    required this.name,
+  UserModel( {
+   required this.name,
+    required this.uid,
     required this.username,
     required this.email,
+    required this.phone,
   });
 
   factory UserModel.fromFirestore(Map<String, dynamic> data) {
     return UserModel(
-      username: data['username'] ?? '',
-      email: data['email'] ?? '',
-      name: data["name"] ?? '',
-      phoneNo: data['phone'] ?? '',
+      uid: data['uid'] ??
+          '', // Assuming 'uid' is a field in your Firestore document
+      username: data['username'] ?? '', // Replace with the actual field name
+       name: data['name'] ?? '',
+      email: data['email'] ?? '', // Replace with the actual field name
+      phone: data['phone'] ?? '', // Replace with the actual field name
     );
   }
 }

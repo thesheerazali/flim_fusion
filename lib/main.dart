@@ -74,8 +74,8 @@ class _MainPageState extends State<MainPage> {
           resizeToAvoidBottomInset: false,
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.black,
-            selectedItemColor: Colors.black,
-            unselectedItemColor: Colors.black.withOpacity(0.4),
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white.withOpacity(0.4),
             currentIndex: currentPage,
             onTap: (index) {
               setState(() {
@@ -84,18 +84,22 @@ class _MainPageState extends State<MainPage> {
             },
             items: const [
               BottomNavigationBarItem(
+                backgroundColor: Colors.black,
                 icon: Icon(CupertinoIcons.home),
                 label: "Home",
               ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.black,
                 icon: Icon(CupertinoIcons.cart),
                 label: "Cart",
               ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.black,
                 icon: Icon(Icons.favorite_border_outlined),
                 label: "Favorites",
               ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.black,
                 icon: Icon(CupertinoIcons.person),
                 label: "Profile",
               ),

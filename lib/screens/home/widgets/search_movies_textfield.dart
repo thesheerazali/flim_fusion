@@ -5,7 +5,7 @@ import 'package:film_fusion/screens/home/widgets/search_screen_result.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SearchMoviesTextField extends GetView<HomeScreenController> {
+class SearchMoviesTextField extends StatelessWidget{
   SearchMoviesTextField({
     super.key,
   });
@@ -15,6 +15,7 @@ class SearchMoviesTextField extends GetView<HomeScreenController> {
 
   @override
   Widget build(BuildContext context) {
+       HomeScreenController controller= Get.put(HomeScreenController());
     return TextFormField(
         controller: searchController,
         onChanged: (query) {

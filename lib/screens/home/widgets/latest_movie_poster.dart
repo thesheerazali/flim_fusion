@@ -8,13 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:film_fusion/controller/home_screen_controller.dart';
 import 'package:get/get.dart';
 
-class LatestMoviePoster extends GetView<HomeScreenController> {
+class LatestMoviePoster extends StatelessWidget {
   LatestMoviePoster({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    HomeScreenController controller = Get.put(HomeScreenController());
     return Flexible(
       flex: 1,
       fit: FlexFit.loose,
@@ -23,9 +24,9 @@ class LatestMoviePoster extends GetView<HomeScreenController> {
           child: Obx(
             () => ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: controller.latestMovies.length,
+              itemCount: controller.latsetmoviesList.length,
               itemBuilder: (context, index) {
-                final movie = controller.latestMovies[index];
+                final movie = controller.latsetmoviesList[index];
                 final genreNames =
                     GenreData().mapGenreIdsToNames(movie.genreIds, 2);
                 return GestureDetector(

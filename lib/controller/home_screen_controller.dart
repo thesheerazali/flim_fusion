@@ -7,15 +7,17 @@ import '../services/movies_data.dart';
 
 class HomeScreenController extends GetxController {
   RxBool isLoading = true.obs;
-  RxList<Latest> latestMovies = <Latest>[].obs;
-  RxList<Result> trendingMovies = <Result>[].obs;
+  RxList<Movies> latsetmoviesList = <Movies>[].obs;
+    RxList<Movies> trendingmoviesList = <Movies>[].obs;
+  // RxList<Movies> moviesList = <Movies>[].obs;
+
   RxInt latestPage = 1.obs; // Page for latest movies
   RxInt trendingPage = 1.obs; // Page for trending movies
   RxBool latestHasMoreData = true.obs;
   RxBool trendingHasMoreData = true.obs;
   var scrollControllerLatest = ScrollController();
   var scrollControllerTrending = ScrollController();
-  final searchResults = <Result>[].obs;
+  final searchResults = <Movies>[].obs;
 
   // final suggestions = <String>[].obs; // Suggestions list
 
@@ -24,7 +26,7 @@ class HomeScreenController extends GetxController {
     fetchLatestMovies();
     fetchTrendingMovies();
     configureScrollControllers();
-    ;
+    
 
     super.onInit();
   }
@@ -34,9 +36,9 @@ class HomeScreenController extends GetxController {
       isLoading(true);
       // Fetch latest movies data
       final newLatestMovies = await MovieService.getNewMovies(latestPage.value);
-      latestMovies.addAll(newLatestMovies);
+      latsetmoviesList.addAll(newLatestMovies);
       latestHasMoreData.value = true;
-     // Set to true if there's more data to load
+      // Set to true if there's more data to load
     } finally {
       isLoading(false);
     }
@@ -48,7 +50,7 @@ class HomeScreenController extends GetxController {
       // Fetch trending movies data
       final newTrendingMovies =
           await MovieService.fetchTrendingMovies(trendingPage.value);
-      trendingMovies.addAll(newTrendingMovies);
+      trendingmoviesList.addAll(newTrendingMovies);
       trendingHasMoreData.value =
           true; // Set to true if there's more data to load
     } finally {
@@ -99,7 +101,7 @@ class HomeScreenController extends GetxController {
     latestPage++;
     debugPrint(latestPage.toString());
     final moreLatestMovies = await MovieService.getNewMovies(latestPage.value);
-    latestMovies.addAll(moreLatestMovies);
+    latsetmoviesList.addAll(moreLatestMovies);
   }
 
   void loadMoreTrendingMovies() async {
@@ -107,7 +109,7 @@ class HomeScreenController extends GetxController {
     debugPrint(trendingPage.toString());
     final moreTrendingMovies =
         await MovieService.fetchTrendingMovies(trendingPage.value);
-    trendingMovies.addAll(moreTrendingMovies);
+    trendingmoviesList.addAll(moreTrendingMovies);
   }
 
   void resetPageParameter() {

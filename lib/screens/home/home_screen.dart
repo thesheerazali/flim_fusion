@@ -10,11 +10,12 @@ import 'package:get/get.dart';
 
 import '../../controller/home_screen_controller.dart';
 
-class HomeScreen extends GetView<HomeScreenController> {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+   HomeScreenController controller= Get.put(HomeScreenController());
     final TextEditingController searchController =
         TextEditingController(); // Add this line
     return SafeArea(

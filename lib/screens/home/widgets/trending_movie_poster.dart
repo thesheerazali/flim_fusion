@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film_fusion/constants/routes.dart';
 
@@ -9,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:film_fusion/controller/home_screen_controller.dart';
 import 'package:get/get.dart';
 
-class TrendingMoviePosters extends GetView<HomeScreenController> {
+class TrendingMoviePosters extends StatelessWidget {
   TrendingMoviePosters({
     Key? key,
   }) : super(key: key);
 
-  @override
   Widget build(BuildContext context) {
+    HomeScreenController controller = Get.put(HomeScreenController());
     return Flexible(
       flex: 1,
       fit: FlexFit.loose,
@@ -24,9 +23,9 @@ class TrendingMoviePosters extends GetView<HomeScreenController> {
           child: Obx(
             () => ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: controller.trendingMovies.length,
+              itemCount: controller.trendingmoviesList.length,
               itemBuilder: (context, index) {
-                final movie = controller.trendingMovies[index];
+                final movie = controller.trendingmoviesList[index];
                 final genreNames =
                     GenreData().mapGenreIdsToNames(movie.genreIds, 2);
 

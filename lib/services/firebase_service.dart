@@ -5,23 +5,27 @@ import 'package:get/get.dart';
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
- // Getter for isSaved
+  // Getter for isSaved
 
   Future<void> signUpUser({
     required String email,
     required String password,
     required String name,
     required String phone,
-    required String username,
+    required String
+        username, //required Null Function(String verificationId) onVerificationCompleted, required Null Function(String error) onVerificationFailed,
   }) async {
     try {
       // Create a user account with email and password
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
+          // await _auth.signInWithCredential(credential)
+
       // Get the current user's UID
       final currentUser = _auth.currentUser;
       final uid = currentUser?.uid;
+   
 
       if (uid != null) {
         // Store user data in Firestore
@@ -39,8 +43,6 @@ class FirebaseService {
     }
   }
 
- 
- 
 // Future<void> saveMovieToFirestore(int movieId) async {
 //   final user = FirebaseAuth.instance.currentUser;
 //   if (user != null) {
