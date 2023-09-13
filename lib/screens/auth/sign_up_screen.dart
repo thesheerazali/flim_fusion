@@ -1,4 +1,5 @@
 import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/screens/auth/sms_code_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -27,6 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   String phoneNumber = '';
+  bool isLoading = false;
 
   String? _validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -54,8 +56,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number is required';
-    } else if (value.length != 11) {
-      return 'Phone number should be 11 digits';
+    } else if (value.length != 10) {
+      return 'Phone number should be 10 digits';
     }
     return null;
   }
@@ -83,23 +85,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  void _validatePhoneNumber(String value) {
-    if (value.isEmpty) {
-      // Show an error message if the field is empty
-      setState(() {
-        phoneNumber = 'Please enter a phone number';
-      });
-    } else if (value.length != 11) {
-      // Show an error message if the phone number is not 11 digits
-      setState(() {
-        phoneNumber = 'Phone number must be 11 digits';
-      });
-    } else {
-      // Clear the error message if the condition is met
-      setState(() {
-        phoneNumber = '';
-      });
+  String? _validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a valid 10-digit phone number';
     }
+    return null;
   }
 
   String? _validateConfirmPassword(String? value) {
@@ -111,25 +101,101 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
+  TextEditingController _smsCodeController = TextEditingController();
+  String _verificationId = '';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // void _signUp() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     try {
+  //       // Signup user with Firebase
+  //       await _firebaseService.signUpUser(
+  //           email: _emailController.text,
+  //           password: _passwordController.text,
+  //           name: _nameController.text,
+  //           phone: _phoneController.text,
+  //           username: _usernameController.text);
+
+  //       // Navigate to the main screen on successful signup
+  //       Get.offNamed(login);
+  //     } catch (e) {
+  //       // Handle signup errors (e.g., duplicate email, weak password)
+  //       // Display an error message to the user
+  //       final snackBar = SnackBar(content: Text('Signup failed: $e'));
+  //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //     }
+  //   }
+  // }
   void _signUp() async {
     if (_formKey.currentState!.validate()) {
       try {
-        // Signup user with Firebase
-        await _firebaseService.signUpUser(
-            email: _emailController.text,
-            password: _passwordController.text,
-            name: _nameController.text,
-            phone: _phoneController.text,
-            username: _usernameController.text);
+        setState(() {
+          isLoading = true; // Set loading to true
+        });
+        await _auth.verifyPhoneNumber(
+          phoneNumber: "+92${_phoneController.text}",
+          verificationCompleted: (AuthCredential credential) {
+            // Auto verification if on the same device
+            _signInWithCredential(credential);
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            // Handle verification failure
+            print("Verification Failed: ${e.message}");
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            // Save verification ID for later use
+            _verificationId = verificationId;
 
-        // Navigate to the main screen on successful signup
-        Get.offNamed(login);
+            // Navigate to SMS code verification screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SmsCodeScreen(
+                  verificationId: verificationId,
+                  name: _nameController.text,
+                  phone: "+92${_phoneController.text}",
+                  username: _usernameController.text,
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                ),
+              ),
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            // Timeout handling
+          },
+        );
+        setState(() {
+          isLoading = false; // Set loading back to false
+        });
       } catch (e) {
-        // Handle signup errors (e.g., duplicate email, weak password)
-        // Display an error message to the user
-        final snackBar = SnackBar(content: Text('Signup failed: $e'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        print("Error sending SMS code: $e");
+        setState(() {
+          isLoading = false; // Set loading back to false in case of error
+        });
       }
+    }
+  }
+
+  Future<void> _signInWithCredential(AuthCredential credential) async {
+    try {
+      // Sign in with the provided credential
+      await _auth.signInWithCredential(credential);
+
+      // If sign-in is successful, register the user
+      await _firebaseService.signUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        name: _nameController.text,
+        phone: "+92${_phoneController.text}",
+        username: _usernameController.text,
+      );
+
+      // Navigate to the login screen
+      Get.offNamed(login);
+    } catch (e) {
+      // Handle sign-in errors
+      print("Error signing in: $e");
     }
   }
 
@@ -267,27 +333,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     validator: _validatePhone,
                     onChanged: _validatePhoneNumber,
                     style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      errorText: phoneNumber,
-                      hintText: 'Phone No',
-                      hintStyle: const TextStyle(color: Colors.white),
-                      prefixIcon: const Icon(
+                    decoration: const InputDecoration(
+                      hintText: 'Phone No', // Use a standard hint text
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Icon(
                         Icons.phone,
                         color: Colors.white,
                       ),
                       alignLabelWithHint: true,
-                      errorBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color:
-                              Colors.white, // Change the border color to blue
-                        ),
-                      ),
-                      focusedErrorBorder: const UnderlineInputBorder(
+                      focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors
                               .white, // Color of the bottom line when focused
                           width:
                               2.0, // Thickness of the bottom line when focused
+                        ),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 2, // Color of the bottom line when unfocused
                         ),
                       ),
                     ),
@@ -298,6 +363,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   TextFormField(
                     controller: _passwordController,
                     validator: _validatePassword,
+                    obscureText: true,
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       hintText: 'Password',
@@ -324,7 +390,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: Get.height * .01,
+                    height: Get.height * .02,
                   ),
                   TextFormField(
                     controller: _confirmPasswordController,
@@ -366,11 +432,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white),
-                      child: const Center(
-                          child: Text(
-                        "SIGN UP",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      )),
+                      child: Center(
+                          child: isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : const Text(
+                                  "SIGN UP",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                )),
                     ),
                   ),
                   SizedBox(
