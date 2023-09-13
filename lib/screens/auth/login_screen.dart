@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'login_with_phone.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -11,8 +13,11 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+enum LoginType { email, phone }
+
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
+  LoginType _loginType = LoginType.email; // Default to email login
   // final _formKey = GlobalKey<FormState>();
   // TextEditingController emailController = TextEditingController();
   // TextEditingController passwordController = TextEditingController();
@@ -41,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isLoading = true;
     });
+
     _auth
         .signInWithEmailAndPassword(
             email: _useremailController.text.toString(),
@@ -173,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: Get.height * .005,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () =>forgetPassowrdDialog(),
                 child: Text(
                   "Forgot Your Password?",
                   style: TextStyle(
@@ -181,6 +187,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+              // GestureDetector(
+              //   onTap: () {
+              //     Get.to(PhoneNumberScreen());
+              //   },
+              //   child: Container(
+              //     height: 60,
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(10),
+              //         color: Colors.white),
+              //     child: Center(
+              //         child: isLoading
+              //             ? const Center(
+              //                 child: CircularProgressIndicator(
+              //                   color: Colors.black,
+              //                 ),
+              //               )
+              //             : const Text(
+              //                 "LOGIN WITH PHONE",
+              //                 style:
+              //                     TextStyle(color: Colors.black, fontSize: 20),
+              //               )),
+              //   ),
+              // ),
               SizedBox(
                 height: Get.height * .04,
               ),
@@ -197,114 +227,55 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+   Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      Get.snackbar("Password Reset Email Sent", "Check your email for password reset instructions.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.greenAccent.withOpacity(0.7));
+    } catch (error) {
+      Get.snackbar("Error", error.toString(),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.7));
+    }
+  }
+
+  void forgetPassowrdDialog(){
+     showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController emailController = TextEditingController();
+        return AlertDialog(
+          title: Text("Forgot Password"),
+          content: TextField(
+            controller: emailController,
+            decoration: InputDecoration(
+              labelText: "Enter your email",
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                String email = emailController.text;
+                if (email.isNotEmpty) {
+                  sendPasswordResetEmail(email);
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text("Reset Password"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 
-
-
-// Form(
-//           key: _formKey,
-//           child: SingleChildScrollView(
-//             child: Padding(
-//               padding:
-//                   const EdgeInsets.symmetric(horizontal: 16, vertical: 200),
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: [
-//                   TextFormField(
-//                     controller: emailController,
-//                     keyboardType: TextInputType.emailAddress,
-//                     decoration: InputDecoration(
-//                       hintText: "Email",
-//                       hintStyle: const TextStyle(
-//                         fontSize: 16,
-//                         color: Colors.white,
-//                       ),
-//                       filled: true,
-//                       fillColor: Colors.black.withOpacity(0.4),
-//                       border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.circular(10),
-//                         borderSide: BorderSide.none,
-//                       ),
-//                     ),
-//                     validator: (value) {
-//                       if (value!.isEmpty) {
-//                         return "Enter Email";
-//                       }
-//                       return null;
-//                     },
-//                   ),
-//                   const SizedBox(
-//                     height: 20,
-//                   ),
-//                   TextFormField(
-//                     controller: passwordController,
-//                     keyboardType: TextInputType.text,
-//                     obscureText: true,
-//                     decoration: InputDecoration(
-//                       hintText: "Password",
-//                       hintStyle: const TextStyle(
-//                         fontSize: 16,
-//                         color: Colors.white,
-//                       ),
-//                       filled: true,
-//                       fillColor: Colors.black.withOpacity(0.4),
-//                       border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.circular(10),
-//                         borderSide: BorderSide.none,
-//                       ),
-//                     ),
-//                     validator: (value) {
-//                       if (value!.isEmpty) {
-//                         return "Enter Password";
-//                       }
-//                       return null;
-//                     },
-//                   ),
-//                   const SizedBox(
-//                     height: 40,
-//                   ),
-//                   GestureDetector(
-//                     onTap: () {
-//                       if (_formKey.currentState!.validate()) {
-//                         login();
-//                       }
-//                     },
-//                     child: Container(
-//                       height: 50,
-//                       width: double.infinity,
-//                       decoration: BoxDecoration(
-//                           color: Colors.blue,
-//                           borderRadius: BorderRadius.circular(10)),
-//                       child: Center(
-                          // child: isLoading
-                          //     ? const Center(
-                          //         child: CircularProgressIndicator(
-                          //           color: Colors.white,
-                          //         ),
-                          //       )
-                          //     : const Text(
-//                                   "Login",
-//                                   style: TextStyle(
-//                                       fontSize: 16,
-//                                       fontWeight: FontWeight.w600),
-//                                 )),
-//                     ),
-//                   ),
-//                   const SizedBox(
-//                     height: 20,
-//                   ),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       const Text("Don't have an account?"),
-//                       TextButton(
-//                           onPressed: () => Get.toNamed(signup),
-//                           child: const Text("Sign Up"))
-//                     ],
-//                   )
-//                 ],
-//               ),
-//             ),
-//           )),
