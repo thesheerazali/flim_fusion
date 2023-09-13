@@ -1,26 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film_fusion/constants/routes.dart';
 import 'package:film_fusion/controller/home_screen_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 
 import '../../../controller/favorite_screen_controller.dart';
-import '../../../services/firebase_service.dart';
 import '../../../utils/genre_data.dart';
 
-class TrendingCategoriesList extends GetView<HomeScreenController> {
+class TrendingCategoriesList extends StatelessWidget {
   final String title;
 
-  const TrendingCategoriesList(this.title, {super.key});
+  TrendingCategoriesList(this.title, {super.key});
 
   // Get the instance of HomeScreenController
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    final FavorieScreenController favcontroller =
-        Get.find<FavorieScreenController>();
+    HomeScreenController controller = Get.put(HomeScreenController());
+    FavoriteMoviesController favoriteMoviesController =
+        Get.put(FavoriteMoviesController());
+    favoriteMoviesController.fetchFavoriteMovies(user!.uid);
     return Obx(() {
       return WillPopScope(
           onWillPop: () async {
@@ -56,18 +59,18 @@ class TrendingCategoriesList extends GetView<HomeScreenController> {
                       crossAxisSpacing: 20.0,
                       childAspectRatio: 0.5 // Add spacing between co
                       ),
-                  itemCount: controller.trendingMovies.length +
+                  itemCount: controller.trendingmoviesList.length +
                       1, // Add 1 for the loading indicator
                   controller: controller.scrollControllerTrending,
 
                   itemBuilder: (context, index) {
-                    if (index < controller.trendingMovies.length) {
-                      final movie = controller.trendingMovies[index];
+                    if (index < controller.trendingmoviesList.length) {
+                      final movie = controller.trendingmoviesList[index];
                       final genreNames =
                           GenreData().mapGenreIdsToNames(movie.genreIds, 2);
                       return GestureDetector(
                         onTap: () =>
-                            Get.offNamed(detailScreen, arguments: movie),
+                            Get.toNamed(detailScreen, arguments: movie),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -93,29 +96,30 @@ class TrendingCategoriesList extends GetView<HomeScreenController> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      left: Get.width * .27, top: 10),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      // favcontroller
-                                      //     .toggleFavoriteStatus(movie.id);
-                                    },
-                                    child: Container(
-                                      height: 40,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors
-                                            .grey, // Default color when the movie is not saved
+                                    padding: EdgeInsets.only(
+                                        left: Get.width * .27, top: 10),
+                                    child: Obx(
+                                      () {
+                                        final isFavorite =
+                                            favoriteMoviesController
+                                                .isMovieFavorite(movie);
+
+                                        return IconButton(
+                                      icon: Icon(
+                                        isFavorite
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: isFavorite
+                                            ? Colors.red
+                                            : Colors.grey,
                                       ),
-                                      child: Icon(
-                                        Icons
-                                            .favorite_border, // Change the icon based on the saved status
-                                        color: Colors.white, // Icon color
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                      onPressed: () {
+                                        favoriteMoviesController.toggleFavorite(
+                                            movie: movie, userId: user!.uid);
+                                      },
+                                    );
+                                      },
+                                    )),
                               ],
                             ),
                             const SizedBox(
@@ -132,7 +136,7 @@ class TrendingCategoriesList extends GetView<HomeScreenController> {
                                   color: Colors.white),
                             ),
                             Container(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(7),
                                 color: Colors.red,
@@ -141,7 +145,7 @@ class TrendingCategoriesList extends GetView<HomeScreenController> {
                                 maxLines: 1, // Limit to one line
                                 overflow: TextOverflow.ellipsis,
                                 genreNames,
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                             RatingBar.builder(
