@@ -27,8 +27,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  String phoneNumber = '';
   bool isLoading = false;
+  bool _obscurePass = true;
+  bool _obscureConf = true;
+  String phoneNumber = '';
 
   String? _validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -56,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number is required';
-    } else if (value.length != 10) {
+    } else if (value.length != 11) {
       return 'Phone number should be 10 digits';
     }
     return null;
@@ -105,27 +107,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _verificationId = '';
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // void _signUp() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     try {
-  //       // Signup user with Firebase
-  //       await _firebaseService.signUpUser(
-  //           email: _emailController.text,
-  //           password: _passwordController.text,
-  //           name: _nameController.text,
-  //           phone: _phoneController.text,
-  //           username: _usernameController.text);
-
-  //       // Navigate to the main screen on successful signup
-  //       Get.offNamed(login);
-  //     } catch (e) {
-  //       // Handle signup errors (e.g., duplicate email, weak password)
-  //       // Display an error message to the user
-  //       final snackBar = SnackBar(content: Text('Signup failed: $e'));
-  //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //     }
-  //   }
-  // }
   void _signUp() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -141,6 +122,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           verificationFailed: (FirebaseAuthException e) {
             // Handle verification failure
             print("Verification Failed: ${e.message}");
+            setState(() {
+              isLoading = false;
+            });
           },
           codeSent: (String verificationId, int? resendToken) {
             // Save verification ID for later use
@@ -159,20 +143,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   password: _passwordController.text,
                 ),
               ),
-            );
+            ).then((_) {
+              setState(() {
+                isLoading =
+                    false; // Set isLoading back to false when the SMS code screen is dismissed
+              });
+            }).catchError((error) {
+              setState(() {
+                isLoading = false; // Set isLoading back to false on error
+              });
+              print("Error navigating to SMS code screen: $error");
+            });
+            // .then((value) => setState(() {
+            //       isLoading = false; // Set loading back to false
+            //     }))
+            // .onError((error, stackTrace) => setState(() {
+            //       isLoading = false; // Set loading back to false
+            //     }));
           },
           codeAutoRetrievalTimeout: (String verificationId) {
             // Timeout handling
           },
         );
-        setState(() {
-          isLoading = false; // Set loading back to false
-        });
       } catch (e) {
-        print("Error sending SMS code: $e");
         setState(() {
           isLoading = false; // Set loading back to false in case of error
         });
+        print("Error sending SMS code: $e");
       }
     }
   }
@@ -203,262 +200,304 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Color.fromRGBO(38, 116, 9, 1),
-              Color.fromRGBO(0, 0, 0, 1),
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-          ),
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Get.width * .16,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Color.fromRGBO(38, 116, 9, 1),
+                  Color.fromRGBO(0, 0, 0, 1),
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
               ),
-              child: SingleChildScrollView(
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Image.asset(
-                    "assets/images/logo.png",
-                    height: Get.height * .15,
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * .16,
                   ),
-                  const Text(
-                    "Create Your Account",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 27,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: Get.height * .02,
-                  ),
-                  TextFormField(
-                    controller: _nameController,
-                    validator: _validateName,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'Name',
-                      hintStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        CupertinoIcons.person_alt,
-                        color: Colors.white,
-                      ),
-                      alignLabelWithHint: true,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors
-                              .white, // Color of the bottom line when focused
-                          width:
-                              2.0, // Thickness of the bottom line when focused
-                        ),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 2 // Color of the bottom line when unfocused
-                            ),
-                      ),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      height: Get.height * .2,
                     ),
-                  ),
-                  SizedBox(
-                    height: Get.height * .02,
-                  ),
-                  TextFormField(
-                    controller: _usernameController,
-                    validator: _validateUsername,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'Username',
-                      hintStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.person,
-                        color: Colors.white,
-                      ),
-                      alignLabelWithHint: true,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors
-                              .white, // Color of the bottom line when focused
-                          width:
-                              2.0, // Thickness of the bottom line when focused
-                        ),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 2 // Color of the bottom line when unfocused
-                            ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Get.height * .02,
-                  ),
-                  TextFormField(
-                    controller: _emailController,
-                    validator: _validateEmail,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'E-Mail',
-                      hintStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Colors.white,
-                      ),
-                      alignLabelWithHint: true,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors
-                              .white, // Color of the bottom line when focused
-                          width:
-                              2.0, // Thickness of the bottom line when focused
-                        ),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 2 // Color of the bottom line when unfocused
-                            ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Get.height * .02,
-                  ),
-                  TextFormField(
-                    controller: _phoneController,
-                    validator: _validatePhone,
-                    onChanged: _validatePhoneNumber,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'Phone No', // Use a standard hint text
-                      hintStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.phone,
-                        color: Colors.white,
-                      ),
-                      alignLabelWithHint: true,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors
-                              .white, // Color of the bottom line when focused
-                          width:
-                              2.0, // Thickness of the bottom line when focused
-                        ),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
+                    const Text(
+                      "Create Your Account",
+                      style: TextStyle(
                           color: Colors.white,
-                          width: 2, // Color of the bottom line when unfocused
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: Get.height * .015,
+                    ),
+                    TextFormField(
+                      controller: _nameController,
+                      validator: _validateName,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: 'Name',
+                        hintStyle: TextStyle(color: Colors.white),
+                        prefixIcon: Icon(
+                          CupertinoIcons.person_alt,
+                          color: Colors.white,
+                        ),
+                        alignLabelWithHint: true,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Color of the bottom line when focused
+                            width:
+                                2.0, // Thickness of the bottom line when focused
+                          ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.white,
+                              width:
+                                  2 // Color of the bottom line when unfocused
+                              ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: Get.height * .02,
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    validator: _validatePassword,
-                    obscureText: true,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'Password',
-                      hintStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.white,
-                      ),
-                      alignLabelWithHint: true,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors
-                              .white, // Color of the bottom line when focused
-                          width:
-                              2.0, // Thickness of the bottom line when focused
+                    SizedBox(
+                      height: Get.height * .015,
+                    ),
+                    TextFormField(
+                      controller: _usernameController,
+                      validator: _validateUsername,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: 'Username',
+                        hintStyle: TextStyle(color: Colors.white),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                        alignLabelWithHint: true,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Color of the bottom line when focused
+                            width:
+                                2.0, // Thickness of the bottom line when focused
+                          ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.white,
+                              width:
+                                  2 // Color of the bottom line when unfocused
+                              ),
                         ),
                       ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
+                    ),
+                    SizedBox(
+                      height: Get.height * .015,
+                    ),
+                    TextFormField(
+                      controller: _emailController,
+                      validator: _validateEmail,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: 'E-Mail',
+                        hintStyle: TextStyle(color: Colors.white),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: Colors.white,
+                        ),
+                        alignLabelWithHint: true,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Color of the bottom line when focused
+                            width:
+                                2.0, // Thickness of the bottom line when focused
+                          ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.white,
+                              width:
+                                  2 // Color of the bottom line when unfocused
+                              ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: Get.height * .015,
+                    ),
+                    TextFormField(
+                      controller: _phoneController,
+                      validator: _validatePhone,
+                      onChanged: _validatePhoneNumber,
+                      maxLength: 11,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: 'Phone No', // Use a standard hint text
+                        hintStyle: TextStyle(color: Colors.white),
+                        prefixIcon: Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                        ),
+                        alignLabelWithHint: true,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Color of the bottom line when focused
+                            width:
+                                2.0, // Thickness of the bottom line when focused
+                          ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
                             color: Colors.white,
-                            width: 2 // Color of the bottom line when unfocused
-                            ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Get.height * .02,
-                  ),
-                  TextFormField(
-                    controller: _confirmPasswordController,
-                    validator: _validateConfirmPassword,
-                    obscureText: true, // For password fields
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'Confirm Password',
-                      hintStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.white,
-                      ),
-                      alignLabelWithHint: true,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors
-                              .white, // Color of the bottom line when focused
-                          width:
-                              2.0, // Thickness of the bottom line when focused
+                            width: 2, // Color of the bottom line when unfocused
+                          ),
                         ),
                       ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
+                    ),
+                    SizedBox(
+                      height: Get.height * .015,
+                    ),
+                    TextFormField(
+                      controller: _passwordController,
+                      validator: _validatePassword,
+                      obscureText: _obscurePass,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        hintStyle: const TextStyle(color: Colors.white),
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          color: Colors.white,
+                        ),
+                        alignLabelWithHint: true,
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Color of the bottom line when focused
+                            width:
+                                2.0, // Thickness of the bottom line when focused
+                          ),
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.white,
+                              width:
+                                  2 // Color of the bottom line when unfocused
+                              ),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePass
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                             color: Colors.white,
-                            width: 2 // Color of the bottom line when unfocused
-                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePass = !_obscurePass;
+                            });
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: Get.height * .05,
-                  ),
-                  GestureDetector(
-                    onTap: () => _signUp(),
-                    child: Container(
-                      height: Get.height * .07,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
+                    SizedBox(
+                      height: Get.height * .015,
+                    ),
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      validator: _validateConfirmPassword,
+                      obscureText: true, // For password fields
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: 'Confirm Password',
+                        hintStyle: const TextStyle(color: Colors.white),
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          color: Colors.white,
+                        ),
+                        alignLabelWithHint: true,
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Color of the bottom line when focused
+                            width:
+                                2.0, // Thickness of the bottom line when focused
+                          ),
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.white,
+                              width:
+                                  2 // Color of the bottom line when unfocused
+                              ),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConf
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConf = !_obscureConf;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: Get.height * .03,
+                    ),
+                    GestureDetector(
+                      onTap: () => _signUp(),
+                      child: Container(
+                        height: Get.height * .07,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                      child: Center(
-                          child: isLoading
-                              ? const Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : const Text(
-                                  "SIGN UP",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
-                                )),
+                          color: Colors.white,
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "SIGN UP",
+                            style: TextStyle(color: Colors.black, fontSize: 20),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: Get.height * .02,
-                  ),
-                  TextButton(
-                      onPressed: () {},
-                      // onPressed: () => Get.toNamed(signup),
-                      child: Text(
-                        "LOGIN",
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.8), fontSize: 30),
-                      ))
-                ]),
+                    SizedBox(
+                      height: Get.height * .015,
+                    ),
+                    TextButton(
+                        onPressed: () => Get.offNamed(login),
+                        // onPressed: () => Get.toNamed(signup),
+                        child: Text(
+                          "LOGIN",
+                          style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 30),
+                        ))
+                  ]),
+                ),
               ),
             ),
-          ),
+            if (isLoading)
+              Container(
+                color: Colors.black
+                    .withOpacity(0.5), // Dark semi-transparent background
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
