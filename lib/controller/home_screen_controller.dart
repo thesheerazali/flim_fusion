@@ -8,7 +8,8 @@ import '../services/movies_data.dart';
 class HomeScreenController extends GetxController {
   RxBool isLoading = true.obs;
   RxList<Movies> latsetmoviesList = <Movies>[].obs;
-    RxList<Movies> trendingmoviesList = <Movies>[].obs;
+  RxList<Movies> trendingmoviesList = <Movies>[].obs;
+   RxList<Movies> topRatedmoviesList = <Movies>[].obs;
   // RxList<Movies> moviesList = <Movies>[].obs;
 
   RxInt latestPage = 1.obs; // Page for latest movies
@@ -26,7 +27,6 @@ class HomeScreenController extends GetxController {
     fetchLatestMovies();
     fetchTrendingMovies();
     configureScrollControllers();
-    
 
     super.onInit();
   }
@@ -51,6 +51,20 @@ class HomeScreenController extends GetxController {
       final newTrendingMovies =
           await MovieService.fetchTrendingMovies(trendingPage.value);
       trendingmoviesList.addAll(newTrendingMovies);
+      trendingHasMoreData.value =
+          true; // Set to true if there's more data to load
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<void> fetchTopRatedMovies() async {
+    try {
+      isLoading(true);
+      // Fetch trending movies data
+      final topRated =
+          await MovieService.fetchTrendingMovies(trendingPage.value);
+      topRatedmoviesList.addAll(topRated);
       trendingHasMoreData.value =
           true; // Set to true if there's more data to load
     } finally {

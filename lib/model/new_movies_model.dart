@@ -96,7 +96,10 @@ class Movies {
         overview: json["overview"],
         posterPath:
             json["poster_path"] != null ? json["poster_path"] as String : "",
-        releaseDate: DateTime.parse(json["release_date"]),
+        releaseDate: json["release_date"] != null
+            ? DateTime.tryParse(json["release_date"] as String? ?? "") ??
+                DateTime.now()
+            : DateTime.now(),
         title: json["title"],
         voteAverage: json["vote_average"]?.toDouble() ?? 0.0,
       );

@@ -1,4 +1,6 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/db/services/localdb_services.dart';
 import 'package:film_fusion/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,51 +33,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserData();
   }
 
+
+  
   Future<void> _loadUserData() async {
     _user = _auth.currentUser;
+
     if (_user != null) {
-      final userDoc =
-          await _firestore.collection('users').doc(_user!.uid).get();
+      final connectivityResult = await Connectivity().checkConnectivity();
+      var isConnectedToInternet = connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi;
+
+      if (isConnectedToInternet) {
+        // If there is an internet connection, fetch data from Firebase
+        final userDoc = await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.email)
+          .get();
       final userData = userDoc.data();
 
-      if (userData != null) {
-        setState(() {
-          _userData = UserModel.fromFirestore(userData);
-          nameController.text = _userData!.name;
-          emailController.text = _userData!.email;
-          usernameController.text = _userData!.username;
-          phoneController.text = _userData!.phone;
-        });
+        if (userData != null) {
+          setState(() {
+            _userData = UserModel.fromFirestore(userData);
+          });
+        } else {
+          // Handle the case where user data is null, e.g., show an error message
+          print('User data is null.');
+        }
       } else {
-        // Handle the case where user data is null, e.g., show an error message
-        print('User data is null.');
+        // If there is no internet connection, fetch data from local database
+        final userProfile = await (await LocalDbService.usersDao).findUserProfileById(_auth.currentUser!.email.toString());
+
+        if (userProfile != null) {
+          setState(() {
+            _userData = UserModel(
+             
+              name: userProfile.name,
+              email: userProfile.email.toString(),
+              username: userProfile.username,
+              phone: userProfile.phone, uid: '',
+            );
+          });
+        } else {
+          // Handle the case where user data is not found in the local database
+          print('User data not found in local database.');
+        }
       }
     }
   }
+
+  // Future<void> _loadUserData() async {
+  //   _user = _auth.currentUser;
+
+  //   if (_user != null) {
+  //     final userDoc = await _firestore
+  //         .collection('users')
+  //         .doc(_auth.currentUser!.email)
+  //         .get();
+  //     final userData = userDoc.data();
+
+  //     if (userData != null) {
+  //       setState(() {
+  //         _userData = UserModel.fromFirestore(userData);
+  //         nameController.text = _userData!.name;
+  //         emailController.text = _userData!.email;
+  //         usernameController.text = _userData!.username;
+  //         phoneController.text = _userData!.phone;
+  //       });
+  //     } else {
+  //       // Handle the case where user data is null, e.g., show an error message
+  //       print('User data is null.');
+  //     }
+  //   }
+  // }
 
   void _changepasswordDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final TextEditingController oldPasswordController =
+            TextEditingController();
+        final TextEditingController newPasswordController =
+            TextEditingController();
+        bool isLoadingChngePassword = false;
+
         return AlertDialog(
           title: Text('Change Password'),
           content: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                  child: Column(children: [
-                TextFormField(
-                  controller: updatePassword,
-                  decoration: InputDecoration(labelText: 'Password'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter password';
-                    } else if (value.length < 6) {
-                      return 'Please above 6';
-                    }
-                    return null;
-                  },
-                ),
-              ]))),
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: oldPasswordController,
+                    decoration: InputDecoration(labelText: 'Old Password'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter old password';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: newPasswordController,
+                    decoration: InputDecoration(labelText: 'New Password'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter new password';
+                      } else if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -84,14 +157,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                String newPassword = updatePassword.text;
-                if (newPassword.isNotEmpty) {
-                  changePassword(newPassword);
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('Save'),
+              onPressed: isLoadingChngePassword
+                  ? null
+                  : () async {
+                      setState(() {
+                        isLoadingChngePassword = true;
+                      });
+                      print("object");
+                      String oldPassword = oldPasswordController.text;
+                      String newPassword = newPasswordController.text;
+                      if (oldPassword.isNotEmpty && newPassword.isNotEmpty) {
+                        // Verify the old password before changing
+                        try {
+                          AuthCredential credential =
+                              EmailAuthProvider.credential(
+                            email: _auth.currentUser!.email!,
+                            password: oldPassword,
+                          );
+                          await _auth.currentUser!
+                              .reauthenticateWithCredential(credential);
+                          // Old password is correct, change the password
+                          await changePassword(newPassword);
+
+                          Navigator.of(context).pop();
+                          setState(() {
+                            isLoadingChngePassword = false;
+                          });
+                        } catch (e) {
+                          // Handle the case where the old password is incorrect
+                          print('Error reauthenticating: $e');
+                          Get.snackbar("Unsuccessfull",
+                              "Your password has Not updated Unsuccessfull.",
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red.withOpacity(0.7));
+                          setState(() {
+                            isLoadingChngePassword = false;
+                          });
+                        }
+                      }
+                    },
+              child: isLoadingChngePassword
+                  ? const CircularProgressIndicator(
+                      color: Colors.black,
+                    )
+                  : Text('Save'),
             ),
           ],
         );
@@ -103,7 +212,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       await user?.updatePassword(newPassword);
-      Get.snackbar("Password Changed", "Your password has been updated successfully.",
+      Get.snackbar(
+          "Password Changed", "Your password has been updated successfully.",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.greenAccent.withOpacity(0.7));
     } catch (error) {
@@ -227,7 +337,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _loadUserData();
 
       // Show a success message
-      Get.snackbar("Updated", "'Profile updated successfully'");
+      Get.snackbar("Updated", "'Profile updated successfully'",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.6));
     } catch (error) {
       // Handle error, e.g., show an error message
       Get.snackbar("Error", 'Error updating profile: $error');

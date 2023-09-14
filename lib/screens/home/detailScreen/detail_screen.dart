@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/controller/favorite_screen_controller.dart';
 import 'package:film_fusion/screens/profile/profile_screen.dart';
 import 'package:film_fusion/utils/genre_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,8 @@ class MovieDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FavoriteMoviesController controller = Get.put(FavoriteMoviesController());
+    FirebaseAuth _user = FirebaseAuth.instance;
     final detailData = Get.arguments;
     final genreModel = GenreData().mapGenreIdsToNames(detailData.genreIds, 4);
     return SafeArea(
@@ -37,51 +41,51 @@ class MovieDetailScreen extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () => Get.back(),
-                    child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        )),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      showPopupMenu(context);
-                      debugPrint("tab");
-                    },
-                    child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.menu,
-                          color: Colors.white,
-                        )),
-                  ),
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(16),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       InkWell(
+            //         onTap: () => Get.back(),
+            //         child: Container(
+            //             padding: const EdgeInsets.all(10),
+            //             decoration: BoxDecoration(
+            //               color: Colors.black.withOpacity(0.4),
+            //               borderRadius: BorderRadius.circular(50),
+            //               border: Border.all(
+            //                 color: Colors.white,
+            //                 width: 2,
+            //               ),
+            //             ),
+            //             child: const Icon(
+            //               Icons.arrow_back,
+            //               color: Colors.white,
+            //             )),
+            //       ),
+            //       GestureDetector(
+            //         onTap: () {
+            //           showPopupMenu(context);
+            //           debugPrint("tab");
+            //         },
+            //         child: Container(
+            //             padding: const EdgeInsets.all(10),
+            //             decoration: BoxDecoration(
+            //               color: Colors.black.withOpacity(0.4),
+            //               borderRadius: BorderRadius.circular(50),
+            //               border: Border.all(
+            //                 color: Colors.white,
+            //                 width: 2,
+            //               ),
+            //             ),
+            //             child: const Icon(
+            //               Icons.menu,
+            //               color: Colors.white,
+            //             )),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: EdgeInsets.only(top: Get.height * .5),
               child: Container(
@@ -94,8 +98,8 @@ class MovieDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: Get.width * .08),
                   child: SingleChildScrollView(
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: Get.height * .017,
                       ),
                       Text(
                         detailData.title.toUpperCase(),
@@ -107,8 +111,8 @@ class MovieDetailScreen extends StatelessWidget {
                           //  fontWeight: FontWeight.w700
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: Get.height * .017,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -138,8 +142,8 @@ class MovieDetailScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: Get.height * .017,
                       ),
                       RatingBar.builder(
                         initialRating: detailData.voteAverage /
@@ -156,12 +160,12 @@ class MovieDetailScreen extends StatelessWidget {
                           // Handle rating updates if needed
                         },
                       ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: Get.height * .017,
                       ),
                       ReadMoreText(
                         detailData.overview,
-                        trimLines: 7,
+                        trimLines: 4,
                         style: TextStyle(
                             color: Colors.white.withOpacity(0.8), fontSize: 18),
                         colorClickableText: Colors.white,
@@ -169,8 +173,40 @@ class MovieDetailScreen extends StatelessWidget {
                         trimCollapsedText: '...Show more',
                         trimExpandedText: ' show less',
                       ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: Get.height * .025,
+                      ),
+                      InkWell(
+                        onTap: () => controller.toggleFavorite(
+                            movie: detailData, userId: _user.currentUser!.uid),
+                        child: Obx(() {
+                          final isFavorite =
+                              controller.isMovieFavorite(detailData);
+
+                          return Container(
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: Center(
+                                child: isFavorite
+                                    ? const Text(
+                                        "Added",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                      )
+                                    : const Text(
+                                        "Add To Fav",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                      )),
+                          );
+                        }),
                       ),
                     ]),
                   ),

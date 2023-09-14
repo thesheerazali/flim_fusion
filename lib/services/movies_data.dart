@@ -48,27 +48,46 @@ class MovieService {
         'https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query'));
 
     if (response.statusCode == 200) {
-      final trendingMovieModel =
+      final trendingMovie =
           LatestMoviesModel.fromJson(json.decode(response.body));
-      return trendingMovieModel.results;
+      return trendingMovie.results;
     } else {
       throw Exception('Failed to load trending movies');
     }
   }
 
-  static Future<MovieByIdModel> fetchMovieById(int movieId) async {
-    // Replace with your actual API endpoint
-    final apiUrl =
-        'https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey';
-
-    final response = await http.get(Uri.parse(apiUrl));
+  static Future<List<Movies>> fetchToRatedMovies(int page) async {
+    final response = await http.get(
+      Uri.parse(
+          'https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&page=$page'),
+    );
+    debugPrint("Trending Movies responce");
+    debugPrint(response.body);
 
     if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      final movie = MovieByIdModel.fromJson(jsonData);
-      return movie;
+      final toRatedMovie =
+          LatestMoviesModel.fromJson(json.decode(response.body));
+      return toRatedMovie.results;
     } else {
-      throw Exception('Failed to fetch movie details');
+      throw Exception('Failed to load trending movies');
     }
   }
+
+  // https://api.themoviedb.org/3/movie/top_rated?api_key=47ffa47d8792fe1a414a82a3db71ea2e
+
+  // static Future<MovieByIdModel> fetchMovieById(int movieId) async {
+  //   // Replace with your actual API endpoint
+  //   final apiUrl =
+  //       'https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey';
+
+  //   final response = await http.get(Uri.parse(apiUrl));
+
+  //   if (response.statusCode == 200) {
+  //     final jsonData = json.decode(response.body);
+  //     final movie = MovieByIdModel.fromJson(jsonData);
+  //     return movie;
+  //   } else {
+  //     throw Exception('Failed to fetch movie details');
+  //   }
+  // }
 }

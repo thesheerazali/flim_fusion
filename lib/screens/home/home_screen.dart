@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/screens/home/detailScreen/detail_screen.dart';
 import 'package:film_fusion/screens/home/widgets/header.dart';
 import 'package:film_fusion/screens/home/widgets/latest_movie_poster.dart';
 import 'package:film_fusion/screens/home/widgets/search_movies_textfield.dart';
 
 import 'package:film_fusion/screens/home/widgets/section_title.dart';
+import 'package:film_fusion/screens/home/widgets/top_rated_movies_posters.dart';
 import 'package:film_fusion/screens/home/widgets/trending_movie_poster.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +18,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   HomeScreenController controller= Get.put(HomeScreenController());
+    HomeScreenController controller = Get.put(HomeScreenController());
     final TextEditingController searchController =
         TextEditingController(); // Add this line
     return SafeArea(
@@ -92,9 +95,10 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   onTap: () {
                                     // Handle suggestion selection
-
-                                    searchController
-                                        .clear(); // Clear the search field
+                                    Get.toNamed(detailScreen,
+                                        arguments: suggestion);
+                                    controller.searchResults.clear();
+                                    // Clear the search field
                                   },
                                 ),
                               );
@@ -127,6 +131,11 @@ class HomeScreen extends StatelessWidget {
                               height: Get.height * .02,
                             ),
                             TrendingMoviePosters(),
+                            SizedBox(
+                              height: Get.height * .035,
+                            ),
+                            
+                             TopRtaedMoviesPoster(),
                             SizedBox(
                               height: Get.height * .035,
                             ),

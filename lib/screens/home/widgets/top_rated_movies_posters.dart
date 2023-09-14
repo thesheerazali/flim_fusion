@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:film_fusion/controller/home_screen_controller.dart';
 import 'package:get/get.dart';
 
-class TrendingMoviePosters extends StatelessWidget {
-  TrendingMoviePosters({
+class TopRtaedMoviesPoster extends StatelessWidget {
+  TopRtaedMoviesPoster({
     Key? key,
   }) : super(key: key);
 

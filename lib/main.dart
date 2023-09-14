@@ -45,7 +45,6 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> pages = [
     const HomeScreen(),
-    const StreamScreen(),
     FavScreen(),
     ProfileScreen(),
   ];
@@ -87,11 +86,6 @@ class _MainPageState extends State<MainPage> {
                 backgroundColor: Colors.black,
                 icon: Icon(CupertinoIcons.home),
                 label: "Home",
-              ),
-              BottomNavigationBarItem(
-                backgroundColor: Colors.black,
-                icon: Icon(CupertinoIcons.cart),
-                label: "Cart",
               ),
               BottomNavigationBarItem(
                 backgroundColor: Colors.black,
