@@ -17,6 +17,7 @@ enum LoginType { email, phone }
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
+  bool _obscureText = true;
   LoginType _loginType = LoginType.email; // Default to email login
   // final _formKey = GlobalKey<FormState>();
   // TextEditingController emailController = TextEditingController();
@@ -59,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Get.snackbar("LOGIN", "successfully",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.greenAccent.withOpacity(0.5));
-      Get.offNamed(mainScreen);
+      Get.offAllNamed(mainScreen);
     }).onError((error, stackTrace) {
       ToastMessage.toastMessage(error.toString());
       setState(() {
@@ -94,9 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: _useremailController,
                 validator: _validateUsername,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
-                  hintText: 'Username',
+                  hintText: 'Email',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(
                     Icons.person,
@@ -122,28 +123,41 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: _passwordController,
                 validator: _validatePassword,
-                obscureText: true, // For password fields
-                style: TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                obscureText: _obscureText, // For password fields
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
                   hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(
+                  hintStyle: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  prefixIcon: const Icon(
                     Icons.lock,
                     color: Colors.white,
                   ),
                   alignLabelWithHint: true,
-                  focusedBorder: UnderlineInputBorder(
+                  focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
                       color:
                           Colors.white, // Color of the bottom line when focused
                       width: 2.0, // Thickness of the bottom line when focused
                     ),
                   ),
-                  enabledBorder: UnderlineInputBorder(
+                  enabledBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
                         color: Colors.white,
                         width: 2 // Color of the bottom line when unfocused
                         ),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
                   ),
                 ),
               ),
@@ -179,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: Get.height * .005,
               ),
               TextButton(
-                onPressed: () =>forgetPassowrdDialog(),
+                onPressed: () => forgetPassowrdDialog(),
                 child: Text(
                   "Forgot Your Password?",
                   style: TextStyle(
@@ -228,10 +242,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-   Future<void> sendPasswordResetEmail(String email) async {
+  Future<void> sendPasswordResetEmail(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Get.snackbar("Password Reset Email Sent", "Check your email for password reset instructions.",
+      Get.snackbar("Password Reset Email Sent",
+          "Check your email for password reset instructions.",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.greenAccent.withOpacity(0.7));
     } catch (error) {
@@ -241,16 +256,16 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void forgetPassowrdDialog(){
-     showDialog(
+  void forgetPassowrdDialog() {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         TextEditingController emailController = TextEditingController();
         return AlertDialog(
-          title: Text("Forgot Password"),
+          title: const Text("Forgot Password"),
           content: TextField(
             controller: emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Enter your email",
             ),
           ),
@@ -259,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
@@ -269,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text("Reset Password"),
+              child: const Text("Reset Password"),
             ),
           ],
         );
@@ -277,5 +292,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-
