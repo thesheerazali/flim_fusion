@@ -85,7 +85,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `user_profiles` (`email` TEXT, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `phone` TEXT NOT NULL, PRIMARY KEY (`email`))');
+            'CREATE TABLE IF NOT EXISTS `users` (`email` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `phone` TEXT NOT NULL, PRIMARY KEY (`email`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -107,7 +107,7 @@ class _$UserProfileDao extends UserProfileDao {
   )   : _queryAdapter = QueryAdapter(database),
         _userProfileInsertionAdapter = InsertionAdapter(
             database,
-            'user_profiles',
+            'users',
             (UserProfile item) => <String, Object?>{
                   'email': item.email,
                   'name': item.name,
@@ -116,7 +116,7 @@ class _$UserProfileDao extends UserProfileDao {
                 }),
         _userProfileUpdateAdapter = UpdateAdapter(
             database,
-            'user_profiles',
+            'users',
             ['email'],
             (UserProfile item) => <String, Object?>{
                   'email': item.email,
@@ -126,7 +126,7 @@ class _$UserProfileDao extends UserProfileDao {
                 }),
         _userProfileDeletionAdapter = DeletionAdapter(
             database,
-            'user_profiles',
+            'users',
             ['email'],
             (UserProfile item) => <String, Object?>{
                   'email': item.email,
@@ -149,23 +149,29 @@ class _$UserProfileDao extends UserProfileDao {
 
   @override
   Future<List<UserProfile>> findAllUserProfiles() async {
-    return _queryAdapter.queryList('SELECT * FROM user_profiles',
+    return _queryAdapter.queryList('SELECT * FROM users',
         mapper: (Map<String, Object?> row) => UserProfile(
             name: row['name'] as String,
-            email: row['email'] as String?,
+            email: row['email'] as String,
             username: row['username'] as String,
             phone: row['phone'] as String));
   }
 
   @override
   Future<UserProfile?> findUserProfileById(String email) async {
-    return _queryAdapter.query('SELECT * FROM user_profiles WHERE email = ?1',
+    return _queryAdapter.query('SELECT * FROM users WHERE email = ?1',
         mapper: (Map<String, Object?> row) => UserProfile(
             name: row['name'] as String,
-            email: row['email'] as String?,
+            email: row['email'] as String,
             username: row['username'] as String,
             phone: row['phone'] as String),
         arguments: [email]);
+  }
+
+  @override
+  Future<List<String>> getEmails() async {
+    return _queryAdapter.queryList('SELECT email FROM users',
+        mapper: (Map<String, Object?> row) => row.values.first as String);
   }
 
   @override
