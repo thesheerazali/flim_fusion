@@ -23,9 +23,9 @@ class TopRtaedMoviesPoster extends StatelessWidget {
           child: Obx(
             () => ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: controller.trendingmoviesList.length,
+              itemCount: controller.topRatedmoviesList.length,
               itemBuilder: (context, index) {
-                final movie = controller.trendingmoviesList[index];
+                final movie = controller.topRatedmoviesList[index];
                 final genreNames =
                     GenreData().mapGenreIdsToNames(movie.genreIds, 2);
 

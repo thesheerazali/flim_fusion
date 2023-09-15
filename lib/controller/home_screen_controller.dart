@@ -9,15 +9,18 @@ class HomeScreenController extends GetxController {
   RxBool isLoading = true.obs;
   RxList<Movies> latsetmoviesList = <Movies>[].obs;
   RxList<Movies> trendingmoviesList = <Movies>[].obs;
-   RxList<Movies> topRatedmoviesList = <Movies>[].obs;
+  RxList<Movies> topRatedmoviesList = <Movies>[].obs;
   // RxList<Movies> moviesList = <Movies>[].obs;
 
   RxInt latestPage = 1.obs; // Page for latest movies
-  RxInt trendingPage = 1.obs; // Page for trending movies
+  RxInt trendingPage = 1.obs;
+  RxInt topRtaedPage = 1.obs; // Page for trending movies
   RxBool latestHasMoreData = true.obs;
   RxBool trendingHasMoreData = true.obs;
+  RxBool topRatedHasMoreData = true.obs;
   var scrollControllerLatest = ScrollController();
   var scrollControllerTrending = ScrollController();
+  var scrollControllerTopRated = ScrollController();
   final searchResults = <Movies>[].obs;
 
   // final suggestions = <String>[].obs; // Suggestions list
@@ -27,6 +30,7 @@ class HomeScreenController extends GetxController {
     fetchLatestMovies();
     fetchTrendingMovies();
     configureScrollControllers();
+    fetchTopRatedMovies();
 
     super.onInit();
   }
@@ -63,9 +67,9 @@ class HomeScreenController extends GetxController {
       isLoading(true);
       // Fetch trending movies data
       final topRated =
-          await MovieService.fetchTrendingMovies(trendingPage.value);
+          await MovieService.fetchToRatedMovies(topRtaedPage.value);
       topRatedmoviesList.addAll(topRated);
-      trendingHasMoreData.value =
+      topRatedHasMoreData.value =
           true; // Set to true if there's more data to load
     } finally {
       isLoading(false);
@@ -109,6 +113,16 @@ class HomeScreenController extends GetxController {
         }
       }
     });
+
+     scrollControllerTopRated.addListener(() {
+      if (scrollControllerTopRated.position.pixels ==
+          scrollControllerTopRated.position.maxScrollExtent) {
+        // Reached the end of the list, load more data
+        if (topRatedHasMoreData.value) {
+          loadMoreTopRatedMovies();
+        }
+      }
+    });
   }
 
   void loadMoreLatestMovies() async {
@@ -126,16 +140,26 @@ class HomeScreenController extends GetxController {
     trendingmoviesList.addAll(moreTrendingMovies);
   }
 
+  void loadMoreTopRatedMovies() async {
+    topRtaedPage++;
+    debugPrint(topRtaedPage.toString());
+    final moreToRatedMovies =
+        await MovieService.fetchTrendingMovies(topRtaedPage.value);
+    topRatedmoviesList.addAll(moreToRatedMovies);
+  }
+
   void resetPageParameter() {
     trendingPage = 1.obs; // Reset the page parameter for trending movies
-    latestPage = 1.obs; // Reset the page parameter for latest movies
+    latestPage = 1.obs;
+    topRtaedPage = 1.obs; // Reset the page parameter for latest movies
   }
 
   @override
   void onClose() {
     scrollControllerLatest
         .dispose(); // Dispose of the latest movies scroll controller
-    scrollControllerTrending
+    scrollControllerTrending.dispose();
+    scrollControllerTopRated
         .dispose(); // Dispose of the trending movies scroll controller
     super.onClose();
   }

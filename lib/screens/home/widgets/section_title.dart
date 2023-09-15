@@ -1,8 +1,11 @@
 import 'package:film_fusion/screens/home/catagories/latest_categories_.dart';
 import 'package:film_fusion/screens/home/catagories/trending_category.dart';
+import 'package:film_fusion/screens/home/widgets/top_rated_movies_posters.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../catagories/top_rated_category.dart';
 
 class SectionTitle extends StatelessWidget {
   final String title;
@@ -15,13 +18,19 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => title == "New Movies"
-          ? LatestCategoriesList(
-              title,
-            )
-          : TrendingCategoriesList(
-              title,
-            )),
+      onTap: () {
+        if (title == "New Movies") {
+          Get.to(() => LatestCategoriesList(
+                title,
+              ));
+        } else if (title == "Trending Movies") {
+          Get.to(() => TrendingCategoriesList(
+                title,
+              ));
+        } else {
+          Get.to(() => TopRatedCategoriesList(title));
+        }
+      },
       child: Text(
         title,
         style: TextStyle(
