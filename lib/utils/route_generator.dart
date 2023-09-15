@@ -18,11 +18,11 @@ class RouteGenerator {
           ),
       GetPage(
           name: '/login',
-          page: () => const LoginScreen(),
+          page: () =>  LoginScreen(),
           ),
       GetPage(
           name: '/signup',
-          page: () => const SignUpScreen(),
+          page: () =>  SignUpScreen(),
          ),
       GetPage(
           name: '/main',

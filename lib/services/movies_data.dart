@@ -61,7 +61,7 @@ class MovieService {
       Uri.parse(
           'https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&page=$page'),
     );
-    debugPrint("Trending Movies responce");
+    debugPrint("To Rtaed Movies responce");
     debugPrint(response.body);
 
     if (response.statusCode == 200) {

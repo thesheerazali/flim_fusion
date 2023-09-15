@@ -36,17 +36,24 @@ class FavScreen extends StatelessWidget {
             );
           } else if (favoriteMovies.isEmpty) {
             return Center(
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
                     Icons.favorite,
                     color: Colors.red,
+                    size: 80,
                   ),
                   SizedBox(
-                    width: Get.width * .006,
+                    height: Get.height * .05,
                   ),
-                  const Text("NO FAVORITE ITEM AVAILBLE")
+                  const Center(
+                    child: Text(
+                      "NO FAVORITE ITEM AVAILBLE",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                    ),
+                  )
                 ],
               ),
             );

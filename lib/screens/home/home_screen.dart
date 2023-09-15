@@ -131,11 +131,13 @@ class HomeScreen extends StatelessWidget {
                               height: Get.height * .02,
                             ),
                             TrendingMoviePosters(),
-                            SizedBox(
-                              height: Get.height * .035,
+                            const SectionTitle(
+                              title: "Top Rated Movies",
                             ),
-                            
-                             TopRtaedMoviesPoster(),
+                            SizedBox(
+                              height: Get.height * .02,
+                            ),
+                            TopRtaedMoviesPoster(),
                             SizedBox(
                               height: Get.height * .035,
                             ),
