@@ -4,14 +4,12 @@ import 'package:floor/floor.dart';
 class UserProfile {
   @primaryKey
   final String email;
-  
 
   final String name;
   final String username;
   final String phone;
 
   UserProfile({
-   
     required this.name,
     required this.email,
     required this.username,
@@ -20,14 +18,11 @@ class UserProfile {
 
   factory UserProfile.fromFirestore(Map<String, dynamic> data) {
     return UserProfile(
-    
-           // Assuming 'uid' is a field in your Firestore document
+      // Assuming 'uid' is a field in your Firestore document
       username: data['username'] ?? '', // Replace with the actual field name
       name: data['name'] ?? '',
       email: data['email'] ?? '', // Replace with the actual field name
       phone: data['phone'] ?? '', // Replace with the actual field name
     );
   }
-
-  
 }

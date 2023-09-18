@@ -42,21 +42,7 @@ class LoginController extends GetxController {
           )
           .then((value) async {
         isLoading.value = false;
-        final emailList = await (await LocalDbService.usersDao).getEmails();
-        final currentUserEmail = auth.currentUser?.email;
-        final userDoc =
-            await firestore.collection('users').doc(auth.currentUser!.email).get();
-        final userData = userDoc.data();
-
-        if (!emailList.contains(currentUserEmail.toString())) {
-          UserProfile _userData = UserProfile.fromFirestore(userData!);
-          await (await LocalDbService.usersDao).insertUserProfile(UserProfile(
-            name: _userData.name,
-            email: _userData.email,
-            username: _userData.username,
-            phone: _userData.phone,
-          ));
-        }
+       
 
         Get.snackbar(
           "LOGIN",

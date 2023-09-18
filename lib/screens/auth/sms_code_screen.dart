@@ -227,15 +227,6 @@ class SmsCodeScreen extends StatelessWidget {
               },
               onSubmit: (String verificationCode) {
                 controller.smsCodeController.text = verificationCode;
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Verification Code"),
-                      content: Text('Code entered is $verificationCode'),
-                    );
-                  },
-                );
               },
             ),
             SizedBox(

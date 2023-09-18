@@ -23,80 +23,80 @@ class MovieDetailScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30)),
-              child: CachedNetworkImage(
-                imageUrl:
-                    'https://image.tmdb.org/t/p/w200${detailData.posterPath}',
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                filterQuality: FilterQuality.high,
-                height: Get.height * .5,
-                width: double.infinity,
-                fit: BoxFit.fill,
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://image.tmdb.org/t/p/w200${detailData.posterPath}',
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  filterQuality: FilterQuality.high,
+                  height: Get.height * .5,
+                  width: double.infinity,
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.all(16),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       InkWell(
-            //         onTap: () => Get.back(),
-            //         child: Container(
-            //             padding: const EdgeInsets.all(10),
-            //             decoration: BoxDecoration(
-            //               color: Colors.black.withOpacity(0.4),
-            //               borderRadius: BorderRadius.circular(50),
-            //               border: Border.all(
-            //                 color: Colors.white,
-            //                 width: 2,
-            //               ),
-            //             ),
-            //             child: const Icon(
-            //               Icons.arrow_back,
-            //               color: Colors.white,
-            //             )),
-            //       ),
-            //       GestureDetector(
-            //         onTap: () {
-            //           showPopupMenu(context);
-            //           debugPrint("tab");
-            //         },
-            //         child: Container(
-            //             padding: const EdgeInsets.all(10),
-            //             decoration: BoxDecoration(
-            //               color: Colors.black.withOpacity(0.4),
-            //               borderRadius: BorderRadius.circular(50),
-            //               border: Border.all(
-            //                 color: Colors.white,
-            //                 width: 2,
-            //               ),
-            //             ),
-            //             child: const Icon(
-            //               Icons.menu,
-            //               color: Colors.white,
-            //             )),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            Padding(
-              padding: EdgeInsets.only(top: Get.height * .5),
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20))),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Get.width * .08),
-                  child: SingleChildScrollView(
+              // Padding(
+              //   padding: const EdgeInsets.all(16),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       InkWell(
+              //         onTap: () => Get.back(),
+              //         child: Container(
+              //             padding: const EdgeInsets.all(10),
+              //             decoration: BoxDecoration(
+              //               color: Colors.black.withOpacity(0.4),
+              //               borderRadius: BorderRadius.circular(50),
+              //               border: Border.all(
+              //                 color: Colors.white,
+              //                 width: 2,
+              //               ),
+              //             ),
+              //             child: const Icon(
+              //               Icons.arrow_back,
+              //               color: Colors.white,
+              //             )),
+              //       ),
+              //       GestureDetector(
+              //         onTap: () {
+              //           showPopupMenu(context);
+              //           debugPrint("tab");
+              //         },
+              //         child: Container(
+              //             padding: const EdgeInsets.all(10),
+              //             decoration: BoxDecoration(
+              //               color: Colors.black.withOpacity(0.4),
+              //               borderRadius: BorderRadius.circular(50),
+              //               border: Border.all(
+              //                 color: Colors.white,
+              //                 width: 2,
+              //               ),
+              //             ),
+              //             child: const Icon(
+              //               Icons.menu,
+              //               color: Colors.white,
+              //             )),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              Padding(
+                padding: EdgeInsets.only(top: Get.height * .5),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Get.width * .08),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       SizedBox(
                         height: Get.height * .017,
@@ -150,7 +150,11 @@ class MovieDetailScreen extends StatelessWidget {
                             2, // Divide by 2 to convert to a 5-star rating
                         minRating: 1,
                         direction: Axis.horizontal,
-                        allowHalfRating: true,
+                        allowHalfRating:
+                            true, // Set to false to prevent half-star ratings
+                        updateOnDrag: false,
+                        ignoreGestures:
+                            true, // Set to false to prevent rating change on drag
                         itemCount: 5,
                         itemSize: 20,
                         unratedColor: Colors.white.withOpacity(0.8),
@@ -208,12 +212,15 @@ class MovieDetailScreen extends StatelessWidget {
                           );
                         }),
                       ),
+                      SizedBox(
+                        height: Get.height * .08,
+                      )
                     ]),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

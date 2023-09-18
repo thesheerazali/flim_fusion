@@ -440,6 +440,30 @@ class ProfileController extends GetxController {
     super.onInit();
     _loadUserData();
     _checkConnectivity();
+
+    saveTolcaldbWhenEmailNotExists();
+  }
+
+  void saveTolcaldbWhenEmailNotExists() async {
+    final emailList = await (await LocalDbService.usersDao).getEmails();
+    final currentUserEmail = _auth.currentUser?.email;
+    final userDoc = await _firestore
+        .collection('users')
+        .doc(_auth.currentUser!.email)
+        .get();
+    final userData = userDoc.data();
+
+    if (!emailList.contains(currentUserEmail.toString())) {
+      debugPrint("Data added to local db");
+      UserProfile _userData = UserProfile.fromFirestore(userData!);
+      await (await LocalDbService.usersDao).insertUserProfile(UserProfile(
+        name: _userData.name,
+        email: _userData.email,
+        username: _userData.username,
+        phone: _userData.phone,
+        
+      ));
+    }
   }
 
   void addToUpdateQueue(UserProfile request) {
@@ -556,6 +580,7 @@ class ProfileController extends GetxController {
     RxBool isLoading = false.obs;
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         final TextEditingController oldPasswordController =
             TextEditingController();
@@ -589,6 +614,7 @@ class ProfileController extends GetxController {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
+                          isLoading.value = false;
                           return 'Please enter old password';
                         }
                         return null;
@@ -615,8 +641,10 @@ class ProfileController extends GetxController {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
+                          isLoading.value = false;
                           return 'Please enter new password';
                         } else if (value.length < 6) {
+                          isLoading.value = false;
                           return 'Password must be at least 6 characters';
                         }
                         return null;
@@ -642,30 +670,33 @@ class ProfileController extends GetxController {
                   debugPrint("object");
                   String oldPassword = oldPasswordController.text;
                   String newPassword = newPasswordController.text;
-                  if (oldPassword.isNotEmpty && newPassword.isNotEmpty) {
-                    // Verify the old password before changing
-                    try {
-                      AuthCredential credential = EmailAuthProvider.credential(
-                        email: _auth.currentUser!.email!,
-                        password: oldPassword,
-                      );
-                      await _auth.currentUser!
-                          .reauthenticateWithCredential(credential);
-                      // Old password is correct, change the password
-                      await changePassword(newPassword);
+                  if (formKey.currentState!.validate()) {
+                    if (oldPassword.isNotEmpty && newPassword.isNotEmpty) {
+                      // Verify the old password before changing
+                      try {
+                        AuthCredential credential =
+                            EmailAuthProvider.credential(
+                          email: _auth.currentUser!.email!,
+                          password: oldPassword,
+                        );
+                        await _auth.currentUser!
+                            .reauthenticateWithCredential(credential);
+                        // Old password is correct, change the password
+                        await changePassword(newPassword);
 
-                      Navigator.of(context).pop();
+                        Navigator.of(context).pop();
 
-                      isLoading.value = false;
-                    } catch (e) {
-                      // Handle the case where the old password is incorrect
-                      debugPrint('Error reauthenticating: $e');
-                      Get.snackbar("Unsuccessfull",
-                          "Your password has Not updated Unsuccessfull.",
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.red.withOpacity(0.7));
+                        isLoading.value = false;
+                      } catch (e) {
+                        // Handle the case where the old password is incorrect
+                        debugPrint('Error reauthenticating: $e');
+                        Get.snackbar(
+                            "Unsuccessfull", "Enter You Correct Old Password.",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red.withOpacity(0.7));
 
-                      isLoading.value = false;
+                        isLoading.value = false;
+                      }
                     }
                   }
                 },

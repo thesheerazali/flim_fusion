@@ -37,20 +37,20 @@ class HomeScreenController extends GetxController {
 
   Future<void> fetchLatestMovies() async {
     try {
-      isLoading(true);
+      isLoading.value = true;
       // Fetch latest movies data
       final newLatestMovies = await MovieService.getNewMovies(latestPage.value);
       latsetmoviesList.addAll(newLatestMovies);
       latestHasMoreData.value = true;
       // Set to true if there's more data to load
     } finally {
-      isLoading(false);
+      isLoading.value = false;
     }
   }
 
   Future<void> fetchTrendingMovies() async {
     try {
-      isLoading(true);
+       isLoading.value = true;
       // Fetch trending movies data
       final newTrendingMovies =
           await MovieService.fetchTrendingMovies(trendingPage.value);
@@ -58,13 +58,13 @@ class HomeScreenController extends GetxController {
       trendingHasMoreData.value =
           true; // Set to true if there's more data to load
     } finally {
-      isLoading(false);
+     isLoading.value = false;
     }
   }
 
   Future<void> fetchTopRatedMovies() async {
     try {
-      isLoading(true);
+       isLoading.value = true;
       // Fetch trending movies data
       final topRated =
           await MovieService.fetchToRatedMovies(topRtaedPage.value);
@@ -72,18 +72,18 @@ class HomeScreenController extends GetxController {
       topRatedHasMoreData.value =
           true; // Set to true if there's more data to load
     } finally {
-      isLoading(false);
+     isLoading.value = false;
     }
   }
 
   Future<void> searchMovies(String query) async {
     try {
-      isLoading(true);
+      isLoading.value = true;
       final movies = await MovieService.searchMovies(query);
       debugPrint(movies.length.toString());
       searchResults.assignAll(movies);
     } finally {
-      isLoading(false);
+      isLoading.value = false;
     }
   }
 
@@ -114,7 +114,7 @@ class HomeScreenController extends GetxController {
       }
     });
 
-     scrollControllerTopRated.addListener(() {
+    scrollControllerTopRated.addListener(() {
       if (scrollControllerTopRated.position.pixels ==
           scrollControllerTopRated.position.maxScrollExtent) {
         // Reached the end of the list, load more data

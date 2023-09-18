@@ -104,98 +104,112 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+//https://api.themoviedb.org/3/discover/movie?api_key=THE_KEY&with_origin_country=IN
 
 
-
-// class MainPage extends StatefulWidget {
-//   const MainPage({
-//     super.key,
-//   });
-
-//   @override
-//   State<MainPage> createState() => _MainPageState();
-// }
-
-// class _MainPageState extends State<MainPage> {
-//   static int currentPage = 0;
-//   List<Widget> pages = [
-//    const HomeScreen(),
-//     const StreamScreen(),
-//     const FavScreen(),
-//     const ProfileScreen(),
-//   ];
-
-//   DateTime? currentBackPressTime;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
-//     return Scaffold(
-//       backgroundColor: Color(0xfffe6d29),
-//       body: WillPopScope(
-//         onWillPop: () async {
-//           // Handle the back button press
-//           if (currentPage != 0) {
-//             setState(() {
-//               currentPage = 0;
-//             });
-//             return false; // Prevent the default back navigation
-//           }
-//           if (currentBackPressTime == null ||
-//               DateTime.now().difference(currentBackPressTime!) >
-//                   Duration(seconds: 2)) {
-//             currentBackPressTime = DateTime.now();
-//             ScaffoldMessenger.of(context).showSnackBar(
-//               SnackBar(
-//                 content: Text("Press back again to leave"),
-//               ),
-//             );
-//             return false;
-//           }
-//           return true; // Allow the back button to execute
-//         },
-//         child: pages[currentPage],
-//       ),
-//       resizeToAvoidBottomInset: false,
-//       bottomNavigationBar: Padding(
-//         padding: EdgeInsets.symmetric(
-//           horizontal: size.width * .03,
-//         ),
-//         child: GNav(
-//           backgroundColor: Color(0xfffe6d29),
-
-//           activeColor: Color.fromARGB(255, 231, 228, 228),
-//           // tabBackgroundColor: Colors.blue,
-//           onTabChange: (value) {
-//             currentPage = value;
-//             setState(() {});
-//           },
-
-//           tabs: [
-//             const GButton(
-//               icon: CupertinoIcons.home,
-//               text: "Home",
-//               textStyle: TextStyle(
-//                   fontWeight: FontWeight.bold,
-//                   color: Color.fromARGB(255, 231, 228, 228),
-//                   fontSize: 18),
-//             ),
-//             const GButton(
-//               icon: CupertinoIcons.cart,
-//               text: "Cart",
-//             ),
-//             const GButton(
-//               icon: Icons.favorite_border_outlined,
-//               text: "Favorites",
-//             ),
-//             GButton(
-//               padding: EdgeInsets.only(right: size.width * .07),
-//               icon: CupertinoIcons.person,
-//               text: "Profile",
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  // TabBar(
+  //                       labelPadding: EdgeInsets.only(
+  //                         right: size.width * .033,
+  //                       ),
+  //                       indicator: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                         color: Colors.black,
+  //                       ),
+  //                       unselectedLabelColor: Colors.black,
+  //                       padding: EdgeInsets.only(left: size.width * .075),
+  //                       isScrollable: true,
+  //                       controller: _tabController,
+  //                       tabs: [
+  //                         Container(
+  //                             margin: const EdgeInsets.only(left: 10),
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: Border.all(
+  //                                   color: !_tabController.indexIsChanging
+  //                                       ? Colors.black
+  //                                       : Colors.black),
+  //                             ),
+  //                             width: size.width * .35,
+  //                             height: size.height * .065,
+  //                             child: Center(child: Text(categories[0].name))),
+  //                         Container(
+  //                             margin: const EdgeInsets.only(left: 10),
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: Border.all(
+  //                                   color: !_tabController.indexIsChanging
+  //                                       ? Colors.black
+  //                                       : Colors.black),
+  //                             ),
+  //                             width: size.width * .35,
+  //                             height: size.height * .065,
+  //                             child: Center(child: Text(categories[1].name))),
+  //                         Container(
+  //                             margin: const EdgeInsets.only(left: 10),
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: Border.all(
+  //                                   color: !_tabController.indexIsChanging
+  //                                       ? Colors.black
+  //                                       : Colors.black),
+  //                             ),
+  //                             width: size.width * .35,
+  //                             height: size.height * .065,
+  //                             child: Center(child: Text(categories[2].name))),
+  //                         Container(
+  //                             margin: const EdgeInsets.only(left: 10),
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: Border.all(
+  //                                   color: !_tabController.indexIsChanging
+  //                                       ? Colors.black
+  //                                       : Colors.black),
+  //                             ),
+  //                             width: size.width * .35,
+  //                             height: size.height * .065,
+  //                             child: Center(child: Text(categories[3].name))),
+  //                         Container(
+  //                             margin: const EdgeInsets.only(left: 10),
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: Border.all(
+  //                                   color: !_tabController.indexIsChanging
+  //                                       ? Colors.black
+  //                                       : Colors.black),
+  //                             ),
+  //                             width: size.width * .35,
+  //                             height: size.height * .065,
+  //                             child: Center(child: Text(categories[4].name))),
+  //                         Container(
+  //                             margin: const EdgeInsets.only(left: 10),
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: Border.all(
+  //                                   color: !_tabController.indexIsChanging
+  //                                       ? Colors.black
+  //                                       : Colors.black),
+  //                             ),
+  //                             width: size.width * .35,
+  //                             height: size.height * .065,
+  //                             child: Center(child: Text(categories[5].name))),
+  //                       ]),
+  //                   SizedBox(
+  //                     height: size.height * .03,
+  //                   ),
+  //                   Expanded(
+  //                     child: Padding(
+  //                       padding:
+  //                           EdgeInsets.symmetric(horizontal: size.width * .065),
+  //                       child: TabBarView(
+  //                         controller: _tabController,
+  //                         children: [
+  //                           CategoryDataScreen(categoryId: categories[0].id!),
+  //                           CategoryDataScreen(categoryId: categories[1].id!),
+  //                           CategoryDataScreen(categoryId: categories[2].id!),
+  //                           CategoryDataScreen(categoryId: categories[3].id!),
+  //                           CategoryDataScreen(categoryId: categories[4].id!),
+  //                           CategoryDataScreen(categoryId: categories[5].id!),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),

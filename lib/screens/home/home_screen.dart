@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
 
                       SearchMoviesTextField(),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
 
@@ -113,37 +113,43 @@ class HomeScreen extends StatelessWidget {
 
                       Expanded(
                           child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SectionTitle(
-                              title: "New Movies",
-                            ),
-                            SizedBox(
-                              height: Get.height * .02,
-                            ),
-                            LatestMoviePoster(),
-                            const SectionTitle(
-                              title: "Trending Movies",
-                            ),
-                            SizedBox(
-                              height: Get.height * .02,
-                            ),
-                            TrendingMoviePosters(),
-                            const SectionTitle(
-                              title: "Top Rated Movies",
-                            ),
-                            SizedBox(
-                              height: Get.height * .02,
-                            ),
-                            TopRtaedMoviesPoster(),
-                            SizedBox(
-                              height: Get.height * .035,
-                            ),
-                          ],
-                        ),
-                      ))
+                              child: Obx(
+                        () => controller.isLoading.value
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ))
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SectionTitle(
+                                    title: "New Movies",
+                                  ),
+                                  SizedBox(
+                                    height: Get.height * .02,
+                                  ),
+                                  LatestMoviePoster(),
+                                  const SectionTitle(
+                                    title: "Trending Movies",
+                                  ),
+                                  SizedBox(
+                                    height: Get.height * .02,
+                                  ),
+                                  TrendingMoviePosters(),
+                                  const SectionTitle(
+                                    title: "Top Rated Movies",
+                                  ),
+                                  SizedBox(
+                                    height: Get.height * .02,
+                                  ),
+                                  TopRtaedMoviesPoster(),
+                                  SizedBox(
+                                    height: Get.height * .035,
+                                  ),
+                                ],
+                              ),
+                      ))),
                     ],
                   ),
                 ),
