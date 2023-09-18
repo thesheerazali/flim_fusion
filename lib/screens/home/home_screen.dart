@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film_fusion/constants/routes.dart';
-import 'package:film_fusion/screens/home/detailScreen/detail_screen.dart';
+
 import 'package:film_fusion/screens/home/widgets/header.dart';
 import 'package:film_fusion/screens/home/widgets/latest_movie_poster.dart';
 import 'package:film_fusion/screens/home/widgets/search_movies_textfield.dart';
@@ -19,8 +19,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeScreenController controller = Get.put(HomeScreenController());
-    final TextEditingController searchController =
-        TextEditingController(); // Add this line
+
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -62,11 +61,11 @@ class HomeScreen extends StatelessWidget {
                         final suggestions = controller.searchResults;
 
                         if (suggestions.isEmpty) {
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
 
                         return Container(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.12),
                             borderRadius: BorderRadius.circular(10),
@@ -84,14 +83,14 @@ class HomeScreen extends StatelessWidget {
                                     imageUrl:
                                         'https://image.tmdb.org/t/p/w200${suggestion.posterPath}',
                                     placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
+                                        const CircularProgressIndicator(),
                                     errorWidget: (context, url, error) =>
                                         const Icon(Icons.error),
                                     fit: BoxFit.fill,
                                   ),
                                   title: Text(
                                     suggestion.title,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                   onTap: () {
                                     // Handle suggestion selection
