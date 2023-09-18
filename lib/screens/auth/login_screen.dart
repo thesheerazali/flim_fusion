@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../controller/login_screen_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +148,7 @@ class LoginScreen extends StatelessWidget {
                   height: Get.height * .005,
                 ),
                 TextButton(
-                  onPressed: () => controller.forgotPasswordDialog(),
+                  onPressed: () => controller.forgotPasswordDialog(context),
                   child: Text(
                     "Forgot Your Password?",
                     style: TextStyle(

@@ -461,7 +461,6 @@ class ProfileController extends GetxController {
         email: _userData.email,
         username: _userData.username,
         phone: _userData.phone,
-        
       ));
     }
   }
@@ -738,6 +737,7 @@ class ProfileController extends GetxController {
 
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -823,7 +823,7 @@ class ProfileController extends GetxController {
                             }
                           },
                     child: isLoading.value
-                        ? CircularProgressIndicator() // Show loader when loading
+                        ? const CircularProgressIndicator() // Show loader when loading
                         : const Text('Save'),
                   ),
                 ),
@@ -834,89 +834,6 @@ class ProfileController extends GetxController {
       },
     );
   }
-
-  // void showEditProfileDialog(context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Edit Profile'),
-  //         content: Form(
-  //           key: formKey,
-  //           child: SingleChildScrollView(
-  //             child: Column(
-  //               children: [
-  //                 TextFormField(
-  //                   controller: nameController,
-  //                   decoration: const InputDecoration(labelText: 'Name'),
-  //                   validator: (value) {
-  //                     if (value == null || value.isEmpty) {
-  //                       return 'Please enter your name';
-  //                     }
-  //                     return null;
-  //                   },
-  //                 ),
-  //                 TextFormField(
-  //                   controller: emailController,
-  //                   decoration: const InputDecoration(
-  //                     labelText: 'Email',
-  //                     // Set the enabled property to false to make it read-only
-  //                     enabled: false,
-  //                   ),
-  //                 ),
-  //                 TextFormField(
-  //                   controller: usernameController,
-  //                   decoration: const InputDecoration(labelText: 'Username'),
-  //                   validator: (value) {
-  //                     if (value == null || value.isEmpty) {
-  //                       return 'Please enter your username';
-  //                     }
-  //                     return null;
-  //                   },
-  //                 ),
-  //                 TextFormField(
-  //                   controller: phoneController,
-  //                   decoration:
-  //                       const InputDecoration(labelText: 'Phone Number'),
-  //                   validator: (value) {
-  //                     if (value == null || value.isEmpty) {
-  //                       return 'Please enter your phone number';
-  //                     }
-  //                     return null;
-  //                   },
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: const Text('Cancel'),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               if (formKey.currentState!.validate()) {
-  //                 // Update user data in Firestore
-  //                 _updateUserData(
-  //                   name: nameController.text,
-  //                   email: emailController.text,
-  //                   username: usernameController.text,
-  //                   phone: phoneController.text,
-  //                 );
-
-  //                 Navigator.of(context).pop();
-  //               }
-  //             },
-  //             child: const Text('Save'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   Future<void> _updateUserData({
     required String name,

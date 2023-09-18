@@ -2,7 +2,7 @@
 
 import 'package:floor/floor.dart';
 
-import '../../model/user_model.dart';
+
 import '../entity/users.dart';
 
 @dao

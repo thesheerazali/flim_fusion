@@ -4,7 +4,7 @@ import 'package:film_fusion/screens/favorite/fav_screen.dart';
 import 'package:film_fusion/screens/home/detailScreen/detail_screen.dart';
 import 'package:film_fusion/screens/home/home_screen.dart';
 import 'package:film_fusion/screens/home/splash/splash_screen.dart';
-import 'package:film_fusion/utils/screen_bidings.dart';
+
 import 'package:get/get.dart';
 
 import '../screens/auth/login_screen.dart';
@@ -29,10 +29,10 @@ class RouteGenerator {
           page: () => const MainPage(),
         ),
       GetPage(
-          name: '/home', page: () => HomeScreen(), ),
+          name: '/home', page: () => const HomeScreen(), ),
       GetPage(
           name: '/detail',
-          page: () => MovieDetailScreen(),
+          page: () => const MovieDetailScreen(),
          ),
       GetPage(name: '/fav', page: () => FavScreen(), )
     ];

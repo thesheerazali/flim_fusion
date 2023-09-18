@@ -3,9 +3,9 @@ import 'package:film_fusion/constants/api_key.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../model/movie_by_id_model.dart';
+
 import '../model/new_movies_model.dart';
-import '../model/trending_movies_model.dart';
+
 
 class MovieService {
   static Future<List<Movies>> fetchTrendingMovies(int page) async {

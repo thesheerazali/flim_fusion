@@ -60,7 +60,7 @@ class SmsCodeController extends GetxController {
       // Handle verification errors
       // Display an error message to the user
       final snackBar = SnackBar(content: Text('Verification failed: $e'));
-      print(e.toString());
+      debugPrint(e.toString());
       isLoading.value = false;
       ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
 

@@ -1,6 +1,6 @@
 import 'package:film_fusion/screens/home/catagories/latest_categories_.dart';
 import 'package:film_fusion/screens/home/catagories/trending_category.dart';
-import 'package:film_fusion/screens/home/widgets/top_rated_movies_posters.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

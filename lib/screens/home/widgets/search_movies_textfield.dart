@@ -1,7 +1,7 @@
 
 
 import 'package:film_fusion/controller/home_screen_controller.dart';
-import 'package:film_fusion/screens/home/widgets/search_screen_result.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,7 +35,7 @@ class SearchMoviesTextField extends StatelessWidget{
           }
         },
         // controller: searchController,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
         focusNode: _searchFocusNode,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 8),
@@ -55,7 +55,7 @@ class SearchMoviesTextField extends StatelessWidget{
             fontSize: 16,
             color: Colors.white.withOpacity(0.6),
           ),
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.white),
           filled: true,
           fillColor: Colors.white.withOpacity(0.12),
           border: OutlineInputBorder(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -38,8 +39,8 @@ class FirebaseService {
       }
     } catch (e) {
       // Handle signup errors
-      print('Signup Error: $e');
-      throw e;
+      debugPrint('Signup Error: $e');
+     
     }
   }
 

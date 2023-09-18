@@ -5,9 +5,6 @@ import 'package:film_fusion/constants/routes.dart';
 import 'package:film_fusion/utils/toast_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../db/entity/users.dart';
-import '../../db/services/localdb_services.dart';
-
 class LoginController extends GetxController {
   final isLoading = false.obs;
   final obscureText = true.obs;
@@ -31,18 +28,17 @@ class LoginController extends GetxController {
   }
 
   final auth = FirebaseAuth.instance;
- void login() {
+  void login() {
     if (formKey.currentState!.validate()) {
       isLoading.value = true;
 
       auth
           .signInWithEmailAndPassword(
-            email: useremailController.text.toString(),
-            password: passwordController.text.toString(),
-          )
+        email: useremailController.text.toString(),
+        password: passwordController.text.toString(),
+      )
           .then((value) async {
         isLoading.value = false;
-       
 
         Get.snackbar(
           "LOGIN",
@@ -58,7 +54,6 @@ class LoginController extends GetxController {
       });
     }
   }
- 
 
   void sendPasswordResetEmail(String email) async {
     try {
@@ -79,30 +74,119 @@ class LoginController extends GetxController {
     }
   }
 
-  void forgotPasswordDialog() {
-    Get.defaultDialog(
-      title: "Forgot Password",
-      content: Column(
-        children: [
-          TextFormField(
+// void changepasswordDialog(context) {
+//     RxBool isLoading = false.obs;
+//     showDialog(
+//       context: context,
+//       barrierDismissible: false,
+//       builder: (BuildContext context) {
+
+//         return AlertDialog(
+//           title: const Text('Change Password'),
+//           content: Form(
+//             key: formKey,
+//             child: TextFormField(
+//                 controller: useremailController,
+
+//                 decoration: const InputDecoration(
+//                   labelText: 'Enter You Email',
+
+//                 ),
+//                 validator: validateUsername
+//               ),
+//             )
+//         );
+//  } );
+//           actions: [
+  // TextButton(
+  //   onPressed: () {
+  //     Navigator.of(context).pop();
+  //   },
+  //   child: const Text('Cancel'),
+  // ),
+//             Obx(
+//               () => ElevatedButton(
+//                 onPressed: () async {
+//                   isLoading.value = true;
+
+//                   debugPrint("object");
+//                   String oldPassword = oldPasswordController.text;
+//                   String newPassword = newPasswordController.text;
+//                   if (formKey.currentState!.validate()) {
+//                     if (oldPassword.isNotEmpty && newPassword.isNotEmpty) {
+//                       // Verify the old password before changing
+//                       try {
+//                         AuthCredential credential =
+//                             EmailAuthProvider.credential(
+//                           email: _auth.currentUser!.email!,
+//                           password: oldPassword,
+//                         );
+//                         await _auth.currentUser!
+//                             .reauthenticateWithCredential(credential);
+//                         // Old password is correct, change the password
+//                         await changePassword(newPassword);
+
+//                         Navigator.of(context).pop();
+
+//                         isLoading.value = false;
+//                       } catch (e) {
+//                         // Handle the case where the old password is incorrect
+//                         debugPrint('Error reauthenticating: $e');
+//                         Get.snackbar(
+//                             "Unsuccessfull", "Enter You Correct Old Password.",
+//                             snackPosition: SnackPosition.BOTTOM,
+//                             backgroundColor: Colors.red.withOpacity(0.7));
+
+//                         isLoading.value = false;
+//                       }
+//                     }
+//                   }
+//                 },
+//                 child: isLoading.value
+//                     ? const CircularProgressIndicator(
+//                         color: Colors.black,
+//                       )
+//                     : const Text('Save'),
+//               ),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+  void forgotPasswordDialog(context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Forget Password"),
+          content: TextFormField(
             controller: useremailController,
             validator: validateUsername,
             decoration: const InputDecoration(labelText: "Enter your email"),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              String email = useremailController.text.trim();
-              if (email.isNotEmpty) {
-                sendPasswordResetEmail(email);
-                Get.back();
-              }
-            },
-            child: const Text("Reset Password"),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                String email = useremailController.text.trim();
+                if (email.isNotEmpty) {
+                  sendPasswordResetEmail(email);
+                  Get.back();
+                }
+              },
+              child: const Text("Reset Password"),
+            ),
+          ],
+        );
+      },
     );
+    //  barrierDismissible: false,
   }
 }
-
