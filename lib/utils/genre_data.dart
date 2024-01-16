@@ -23,8 +23,8 @@ class GenreData {
     ]
   };
 
-  String mapGenreIdsToNames(List<int>? genreIds, int count) {
-    if (genreIds == null || genreIds.isEmpty) {
+  String mapGenreIdsToNames(List<int> genreIds, int count) {
+    if (genreIds.isEmpty) {
       return 'Unknown';
     }
 

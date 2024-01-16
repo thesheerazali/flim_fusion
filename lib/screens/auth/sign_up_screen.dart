@@ -505,13 +505,13 @@
 //   }
 // }
 
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 import 'package:film_fusion/controller/sign_up_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+ const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

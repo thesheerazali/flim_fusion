@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 import 'package:film_fusion/utils/toast_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

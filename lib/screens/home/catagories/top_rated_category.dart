@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:film_fusion/constants/routes.dart';
 import 'package:film_fusion/controller/home_screen_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 
+import '../../../utils/constants/routes.dart';
 import '../../../controller/favorite_screen_controller.dart';
 import '../../../utils/genre_data.dart';
 

@@ -656,7 +656,7 @@
 //   }
 // }
 
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 import 'package:film_fusion/controller/profile_screen_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -681,7 +681,7 @@ class ProfileScreen extends StatelessWidget {
             IconButton(
               onPressed: () {
                 _auth.signOut().then((value) {
-                  Get.offNamed(login);
+                  Get.offAllNamed(login);
                   Get.snackbar("LOGOUT", "Successfully",
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: Colors.greenAccent.withOpacity(0.7));

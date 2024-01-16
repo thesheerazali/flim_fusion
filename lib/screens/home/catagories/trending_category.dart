@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 import 'package:film_fusion/controller/home_screen_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

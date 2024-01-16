@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 import 'package:film_fusion/controller/favorite_screen_controller.dart';
 import 'package:film_fusion/screens/profile/profile_screen.dart';
 import 'package:film_fusion/utils/genre_data.dart';

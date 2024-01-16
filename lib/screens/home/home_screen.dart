@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 
 import 'package:film_fusion/screens/home/widgets/header.dart';
 import 'package:film_fusion/screens/home/widgets/latest_movie_poster.dart';
@@ -24,6 +24,8 @@ class HomeScreen extends StatelessWidget {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             body: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+
               height: double.infinity,
               width: double.infinity,
               decoration: const BoxDecoration(
@@ -32,8 +34,6 @@ class HomeScreen extends StatelessWidget {
                   Color.fromRGBO(0, 0, 0, 1),
                 ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).requestFocus(FocusNode());
@@ -43,6 +43,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      
                       SizedBox(
                         height: Get.height * .07,
                       ),
@@ -152,7 +153,6 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
             )));
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 import 'package:film_fusion/db/entity/users.dart';
 import 'package:film_fusion/db/services/localdb_services.dart';
 
@@ -54,7 +54,7 @@ class SmsCodeController extends GetxController {
       );
 
       // Navigate to the login screen
-      Get.offAllNamed(login);
+      Get.offAllNamed(mainScreen);
       isLoading.value = false;
     } catch (e) {
       // Handle verification errors

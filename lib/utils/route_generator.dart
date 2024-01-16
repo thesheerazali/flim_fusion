@@ -13,28 +13,33 @@ class RouteGenerator {
   static List<GetPage> getPages() {
     return [
       GetPage(
-          name: '/splash',
-          page: () => const SplashScreen(),
-          ),
+        name: '/splash',
+        page: () => const SplashScreen(),
+      ),
       GetPage(
-          name: '/login',
-          page: () =>  LoginScreen(),
-          ),
+        name: '/login',
+        page: () => LoginScreen(),
+      ),
       GetPage(
-          name: '/signup',
-          page: () =>  SignUpScreen(),
-         ),
+        name: '/signup',
+        page: () => SignUpScreen(),
+      ),
       GetPage(
-          name: '/main',
-          page: () => const MainPage(),
-        ),
+        name: '/main',
+        page: () => const MainPage(),
+      ),
       GetPage(
-          name: '/home', page: () => const HomeScreen(), ),
+        name: '/home',
+        page: () => const HomeScreen(),
+      ),
       GetPage(
-          name: '/detail',
-          page: () => const MovieDetailScreen(),
-         ),
-      GetPage(name: '/fav', page: () => FavScreen(), )
+        name: '/detail',
+        page: () => const MovieDetailScreen(),
+      ),
+      GetPage(
+        name: '/fav',
+        page: () => FavScreen(),
+      )
     ];
   }
 }

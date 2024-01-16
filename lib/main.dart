@@ -1,4 +1,4 @@
-import 'package:film_fusion/constants/routes.dart';
+import 'package:film_fusion/utils/constants/routes.dart';
 import 'package:film_fusion/screens/favorite/fav_screen.dart';
 import 'package:film_fusion/screens/home/home_screen.dart';
 import 'package:film_fusion/screens/profile/profile_screen.dart';
